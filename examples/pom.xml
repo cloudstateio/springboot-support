@@ -5,13 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.cloudstate</groupId>
-    <artifactId>spring-boot-cloudstate-starter</artifactId>
+    <artifactId>examples</artifactId>
     <version>0.4.3</version>
     <packaging>pom</packaging>
-
+    
     <modules>
-        <module>cloudstate-starter</module>
-        <module>examples</module>
     </modules>
 
 </project>
