@@ -3,3 +3,8 @@ logging:
     root: ERROR
     org.springframework: INFO
     io.cloudstate.springboot: DEBUG
+
+io:
+  cloudstate:
+    user-function-interface: "localhost"
+    user-function-port: 8080
