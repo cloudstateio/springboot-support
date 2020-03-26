@@ -3,7 +3,6 @@ package io.cloudstate.springboot.starter;
 import com.google.protobuf.Descriptors;
 import io.cloudstate.javasupport.crdt.CrdtEntity;
 import io.cloudstate.javasupport.eventsourced.EventSourcedEntity;
-import io.cloudstate.protocol.crdt.Crdt;
 import io.cloudstate.springboot.starter.autoconfigure.CloudstateProperties;
 import io.cloudstate.springboot.starter.autoconfigure.EntityAdditionaDescriptors;
 import io.cloudstate.springboot.starter.autoconfigure.EntityServiceDescriptor;
@@ -25,10 +24,15 @@ public final class CloudstateEntityScan implements EntityScan {
 
     private final ApplicationContext context;
     private final CloudstateProperties properties;
+    private final ClassGraph classGraph;
 
     public CloudstateEntityScan(ApplicationContext context, final CloudstateProperties properties) {
         this.context = context;
         this.properties = properties;
+        this.classGraph = new ClassGraph()
+                .enableClassInfo()
+                .enableAnnotationInfo()
+                .blacklistPackages("org.springframework", "io.cloudstate.javasupport");
     }
 
     public List<Entity> findEntities() {
@@ -52,7 +56,7 @@ public final class CloudstateEntityScan implements EntityScan {
     }
 
     private List<Class<?>> getClassAnnotationWith(Class<? extends Annotation> annotationType) {
-        try (ScanResult result = new ClassGraph().enableClassInfo().enableAnnotationInfo().scan()) {
+        try (ScanResult result = classGraph.scan()) {
             return result.getClassesWithAnnotation(annotationType.getName()).loadClasses();
         }
     }
