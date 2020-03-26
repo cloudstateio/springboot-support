@@ -1,11 +1,11 @@
-package io.cloudstate.springboot.starter;
+package io.cloudstate.springboot.starter.scan;
 
 import com.google.protobuf.Descriptors;
 import io.cloudstate.javasupport.crdt.CrdtEntity;
 import io.cloudstate.javasupport.eventsourced.EventSourcedEntity;
+import io.cloudstate.springboot.starter.EntityAdditionaDescriptors;
+import io.cloudstate.springboot.starter.EntityServiceDescriptor;
 import io.cloudstate.springboot.starter.autoconfigure.CloudstateProperties;
-import io.cloudstate.springboot.starter.autoconfigure.EntityAdditionaDescriptors;
-import io.cloudstate.springboot.starter.autoconfigure.EntityServiceDescriptor;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ScanResult;
 import org.slf4j.Logger;

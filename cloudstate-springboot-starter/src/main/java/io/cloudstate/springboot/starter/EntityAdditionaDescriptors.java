@@ -1,4 +1,4 @@
-package io.cloudstate.springboot.starter.autoconfigure;
+package io.cloudstate.springboot.starter;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,4 +7,4 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface EntityServiceDescriptor {}
+public @interface EntityAdditionaDescriptors {}

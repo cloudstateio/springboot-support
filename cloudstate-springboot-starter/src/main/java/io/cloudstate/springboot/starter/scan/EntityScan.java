@@ -1,4 +1,4 @@
-package io.cloudstate.springboot.starter;
+package io.cloudstate.springboot.starter.scan;
 
 import java.util.List;
 

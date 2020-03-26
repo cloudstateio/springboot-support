@@ -6,8 +6,8 @@ import com.google.protobuf.Descriptors;
 import com.google.protobuf.Empty;
 import io.cloudstate.javasupport.EntityId;
 import io.cloudstate.javasupport.eventsourced.*;
-import io.cloudstate.springboot.starter.autoconfigure.EntityAdditionaDescriptors;
-import io.cloudstate.springboot.starter.autoconfigure.EntityServiceDescriptor;
+import io.cloudstate.springboot.starter.EntityAdditionaDescriptors;
+import io.cloudstate.springboot.starter.EntityServiceDescriptor;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
