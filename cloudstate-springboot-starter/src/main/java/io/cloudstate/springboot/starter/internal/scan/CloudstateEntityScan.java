@@ -1,4 +1,4 @@
-package io.cloudstate.springboot.starter.scan;
+package io.cloudstate.springboot.starter.internal.scan;
 
 import com.google.protobuf.Descriptors;
 import io.cloudstate.javasupport.crdt.CrdtEntity;
@@ -15,6 +15,8 @@ import org.springframework.context.ApplicationContext;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -32,12 +34,28 @@ public final class CloudstateEntityScan implements EntityScan {
         this.classGraph = new ClassGraph()
                 .enableClassInfo()
                 .enableAnnotationInfo()
-                .blacklistPackages("org.springframework", "io.cloudstate.javasupport");
+                .blacklistPackages(
+                        "org.springframework",
+                        "com.typesafe",
+                        "com.google",
+                        "com.fasterxml",
+                        "org.slf4j",
+                        "org.eclipse",
+                        "com.twitter",
+                        "io.spray",
+                        "org.reactivestreams",
+                        "org.scala",
+                        "io.grpc",
+                        "io.opencensus",
+                        "org.yaml",
+                        "io.cloudstate.javasupport");
     }
 
     public List<Entity> findEntities() {
+        Instant now = Instant.now();
         List<Entity> crdtEntities = getCrdtDescriptors();
         List<Entity> eventSourcedEntities = getEventSourcedDescriptors();
+        log.debug("Entities found in {}", Duration.between(now, Instant.now()));
 
         if(crdtEntities.isEmpty() && eventSourcedEntities.isEmpty()) {
             throw new IllegalStateException("No declared descriptor");

@@ -1,7 +1,5 @@
 package io.cloudstate.springboot.starter.autoconfigure;
 
-import io.cloudstate.javasupport.CloudState;
-import io.cloudstate.springboot.starter.scan.CloudstateEntityScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -12,6 +10,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.ExecutionException;
+
+import io.cloudstate.javasupport.CloudState;
+import io.cloudstate.springboot.starter.internal.scan.CloudstateEntityScan;
+import static io.cloudstate.springboot.starter.internal.CloudstateUtils.register;
 
 @Configuration
 @ConditionalOnClass(CloudstateProperties.class)
@@ -34,24 +36,7 @@ public class CloudstateAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public CloudState cloudState(CloudstateEntityScan entityScan) throws ExecutionException, InterruptedException {
-        return registerEntities(entityScan);
+        return register(entityScan);
     }
 
-    private CloudState registerEntities(CloudstateEntityScan entityScan) {
-        CloudState cloudState = new CloudState();
-        entityScan.findEntities().forEach(entity -> {
-            switch (entity.getEntityType()) {
-                case EventSourced:
-                    cloudState.registerEventSourcedEntity(entity.getEntityClass(), entity.getDescriptor(), entity.getAdditionalDescriptors());
-                    break;
-                case CRDT:
-                    cloudState.registerCrdtEntity(entity.getEntityClass(), entity.getDescriptor(), entity.getAdditionalDescriptors());
-                    break;
-                default:
-                    throw new IllegalArgumentException(
-                            String.format("Unknown entity type %s", entity.getEntityType()));
-            }
-        });
-        return cloudState;
-    }
 }
