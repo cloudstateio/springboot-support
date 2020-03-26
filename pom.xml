@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>cloudstate-starter</module>
+        <module>cloudstate-springboot-starter</module>
         <module>examples</module>
     </modules>
 

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,12 +19,15 @@ import java.util.concurrent.ExecutionException;
 public class CloudstateAutoConfiguration {
 
     @Autowired
+    private ApplicationContext context;
+
+    @Autowired
     private CloudstateProperties cloudstateProperties;
 
     @Bean
     @ConditionalOnMissingBean
     public CloudstateEntityScan cloudstateEntityScan(){
-        return new CloudstateEntityScan(cloudstateProperties);
+        return new CloudstateEntityScan(context, cloudstateProperties);
     }
 
     @Bean
@@ -38,13 +42,12 @@ public class CloudstateAutoConfiguration {
     private CloudState registerEntities(CloudstateEntityScan entityScan) {
         CloudState cloudState = new CloudState();
         entityScan.findEntities().forEach(entity -> {
-
             switch (entity.getEntityType()) {
                 case EventSourced:
-                    //cloudState.registerEventSourcedEntity();
+                    cloudState.registerEventSourcedEntity(entity.getEntityClass(), entity.getDescriptor(), entity.getAdditionalDescriptors());
                     break;
                 case CRDT:
-                    //cloudState.registerCrdtEntity();
+                    cloudState.registerCrdtEntity(entity.getEntityClass(), entity.getDescriptor(), entity.getAdditionalDescriptors());
                     break;
                 default: throw new IllegalArgumentException("Unknown entity type " + entity.getEntityType());
             }
