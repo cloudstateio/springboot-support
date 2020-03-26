@@ -76,7 +76,7 @@ public final class CloudstateEntityScan implements EntityScan {
                         descriptor = ((Descriptors.ServiceDescriptor)
                                 method.invoke(null, null));
                     } catch (IllegalAccessException | InvocationTargetException e) {
-                        e.printStackTrace();
+                        log.error("Failure on load ServiceDescriptor", e);
                     }
                 }
 
@@ -85,7 +85,7 @@ public final class CloudstateEntityScan implements EntityScan {
                         method.setAccessible(true);
                         additionalDescriptors = (Descriptors.FileDescriptor[]) method.invoke(null, null);
                     } catch (IllegalAccessException | InvocationTargetException e) {
-                        e.printStackTrace();
+                        log.error("Failure on load AdditionalDescriptors", e);
                     }
                 }
             }
