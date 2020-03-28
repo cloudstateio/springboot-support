@@ -2,9 +2,11 @@ package io.cloudstate.springboot.starter.internal;
 
 import io.cloudstate.javasupport.CloudState;
 import io.cloudstate.springboot.starter.internal.scan.CloudstateEntityScan;
+import io.cloudstate.springboot.starter.internal.scan.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Objects;
 
 public final class CloudstateUtils {
@@ -12,8 +14,9 @@ public final class CloudstateUtils {
 
     public static CloudState register(CloudstateEntityScan entityScan) {
         CloudState cloudState = new CloudState();
-        if (Objects.nonNull(entityScan.findEntities()) && !entityScan.findEntities().isEmpty()){
-            entityScan.findEntities().forEach(entity -> {
+        final List<Entity> entities = entityScan.findEntities();
+        if (Objects.nonNull(entities) && !entities.isEmpty()){
+            entities.forEach(entity -> {
 
                 if (Objects.nonNull(entity.getDescriptor())) {
                     switch (entity.getEntityType()) {
