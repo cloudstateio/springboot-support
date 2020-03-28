@@ -5,7 +5,7 @@ import com.google.protobuf.empty.Empty;
 import io.cloudstate.javasupport.eventsourced.EventSourcedEntity;
 
 @EventSourcedEntity
-public class FakeEntity {
+public class FakeEventSourcedEntity {
 
     @EntityServiceDescriptor
     public static Descriptors.ServiceDescriptor descriptor(){

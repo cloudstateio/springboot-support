@@ -34,6 +34,6 @@ public class CloudstateEntityScanTest {
 
         assertNotNull(entities);
         assertFalse(entities.isEmpty());
-        assertEquals(1, entities.size());
+        assertEquals(2, entities.size());
     }
 }
