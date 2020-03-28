@@ -111,7 +111,7 @@ public class ShoppingCartEntity {
 
 ```
 
-The only thing other than a normal cloudstate function is the need to register the descriptors explicitly
+The only thing other than a normal cloudstate function is the need to register the descriptors explicitly.
 ```java
     @EntityServiceDescriptor
     public static Descriptors.ServiceDescriptor getDescriptor() {
@@ -123,8 +123,10 @@ The only thing other than a normal cloudstate function is the need to register t
         return new Descriptors.FileDescriptor[]{com.example.shoppingcart.persistence.Domain.getDescriptor()};
     }
 ```
+These registration notes can be used for any type of Cloudstate function.
 
-Write your main class in the Spring boot style. 
+
+Then write your main class in the Spring boot style. 
 Uses the @EnableCloudstate annotation to tell Spring what to do.
 ```java
 import io.cloudstate.springboot.starter.autoconfigure.EnableCloudstate;
