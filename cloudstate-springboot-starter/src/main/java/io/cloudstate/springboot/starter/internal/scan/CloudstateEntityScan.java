@@ -55,10 +55,10 @@ public final class CloudstateEntityScan implements EntityScan {
         Instant now = Instant.now();
         List<Entity> crdtEntities = getCrdtDescriptors();
         List<Entity> eventSourcedEntities = getEventSourcedDescriptors();
-        log.debug("Entities found in {}", Duration.between(now, Instant.now()));
+        log.debug("Found {} Entity(ies) in {}", (crdtEntities.size() + eventSourcedEntities.size()), Duration.between(now, Instant.now()));
 
         if(crdtEntities.isEmpty() && eventSourcedEntities.isEmpty()) {
-            throw new IllegalStateException("No declared descriptor");
+            log.warn("No declared descriptor");
         }
 
         return Stream.concat(crdtEntities.stream(), eventSourcedEntities.stream())

@@ -37,6 +37,21 @@
             <artifactId>classgraph</artifactId>
             <version>4.8.65</version>
         </dependency>
+
+        <!-- test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <version>${spring-boot.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+            <version>5.4.0</version>
+        </dependency>
     </dependencies>
 
     <build>
