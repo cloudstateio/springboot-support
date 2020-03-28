@@ -7,7 +7,7 @@
 3. [Context Injection](#context-injection)
 4. [Running via Cloudstate CLI](#running-via-cloudstate-cli)
 
-## 1. Getting Started
+## Getting Started
 ***Note: This getting started is based on the official Cloudstate example from shopping-cart. For more information consult the [official documentation](https://cloudstate.io/docs/).***
 
 First add the dependency of the cloudstater starter to your project. Here an Maven example:
@@ -376,7 +376,7 @@ Cloudtate v0.4.3
 
 The complete source code can be found [here](/examples/cloudstate-springboot-example).
 
-## 2. Configuration
+## Configuration
 
 It is possible to configure certain application parameters either via the conventional springboot configuration file 
 ( **application.properties** or **application.yaml**) or via the HOCON configuration file (**application.conf**).
@@ -420,10 +420,10 @@ cloudstate {
 }
 ```
 
-## 3. Context Injection
+## Context Injection
 
 Comming soon
 
-## 4. Running via Cloudstate CLI
+## Running via Cloudstate CLI
 
 Comming soon
