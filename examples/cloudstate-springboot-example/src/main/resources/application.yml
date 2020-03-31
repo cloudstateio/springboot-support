@@ -6,5 +6,5 @@ logging:
 
 io:
   cloudstate:
-    user-function-interface: "localhost"
+    user-function-interface: "127.0.0.1"
     user-function-port: 8080

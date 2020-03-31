@@ -28,6 +28,10 @@ public final class CloudstateEntityScan implements EntityScan {
     private final CloudstateProperties properties;
     private final ClassGraph classGraph;
 
+    public CloudstateProperties getProperties() {
+        return properties;
+    }
+
     public CloudstateEntityScan(ApplicationContext context, final CloudstateProperties properties) {
         this.context = context;
         this.properties = properties;

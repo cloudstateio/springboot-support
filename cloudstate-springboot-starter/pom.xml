@@ -16,6 +16,8 @@
     <properties>
         <cloudstate.version>0.4.3</cloudstate.version>
         <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 

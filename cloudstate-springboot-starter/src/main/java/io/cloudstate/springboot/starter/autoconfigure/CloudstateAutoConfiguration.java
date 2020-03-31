@@ -9,8 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.concurrent.ExecutionException;
-
 import io.cloudstate.javasupport.CloudState;
 import io.cloudstate.springboot.starter.internal.scan.CloudstateEntityScan;
 import static io.cloudstate.springboot.starter.internal.CloudstateUtils.register;
@@ -35,7 +33,7 @@ public class CloudstateAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public CloudState cloudState(CloudstateEntityScan entityScan) throws ExecutionException, InterruptedException {
+    public CloudState cloudState(CloudstateEntityScan entityScan) throws Exception {
         return register(entityScan);
     }
 
