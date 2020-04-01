@@ -1,7 +1,7 @@
 package io.cloudstate.springboot.starter.internal;
 
+import io.cloudstate.javasupport.Context;
 import io.cloudstate.javasupport.EntitySupportFactory;
-import io.cloudstate.javasupport.eventsourced.EventSourcedEntityCreationContext;
 import io.cloudstate.springboot.starter.internal.scan.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ class BaseEntitySupportFactory implements EntitySupportFactory {
     }
 
     @Override
-    public Object create(EventSourcedEntityCreationContext eventSourcedEntityCreationContext, String entityId) {
+    public Object create(Context eventSourcedEntityCreationContext, String entityId) {
         LOG.trace("Create instance of EventSourcedEntity");
         Object obj = context.getBean(entity.getEntityClass());
         return postConstructObject(obj, eventSourcedEntityCreationContext, entityId);

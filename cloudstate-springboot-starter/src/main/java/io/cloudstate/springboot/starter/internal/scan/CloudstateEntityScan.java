@@ -117,5 +117,6 @@ public final class CloudstateEntityScan implements EntityScan {
             return entityType;
         }).collect(Collectors.toList());
     }
+
 }
 

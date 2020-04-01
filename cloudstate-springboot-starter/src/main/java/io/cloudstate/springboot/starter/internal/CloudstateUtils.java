@@ -2,11 +2,12 @@ package io.cloudstate.springboot.starter.internal;
 
 import com.google.protobuf.Descriptors;
 import io.cloudstate.javasupport.CloudState;
+import io.cloudstate.javasupport.Context;
 import io.cloudstate.javasupport.EntityId;
 import io.cloudstate.javasupport.EntitySupportFactory;
 import io.cloudstate.javasupport.eventsourced.EventSourcedEntity;
-import io.cloudstate.javasupport.eventsourced.EventSourcedEntityCreationContext;
 import io.cloudstate.javasupport.impl.AnySupport;
+import io.cloudstate.javasupport.impl.crdt.AnnotationBasedCrdtExtensionSupport;
 import io.cloudstate.javasupport.impl.eventsourced.AnnotationBasedEventSourcedExtensionSupport;
 import io.cloudstate.springboot.starter.CloudstateContext;
 import io.cloudstate.springboot.starter.autoconfigure.CloudstateProperties;
@@ -33,15 +34,13 @@ public final class CloudstateUtils {
 
             entities.forEach(entity -> {
                 EntitySupportFactory entitySupportFactory = new BaseEntitySupportFactory(entity, applicationContext);
+                Class<?> entityClass = entitySupportFactory.typeClass();
+                final AnySupport anySupport = newAnySupport(entity.getAdditionalDescriptors());
 
                 if (Objects.nonNull(entity.getDescriptor())) {
                     switch (entity.getEntityType()) {
 
                         case EventSourced:
-
-                            Class<?> entityClass = entitySupportFactory.typeClass();
-                            AnySupport anySupport = newAnySupport(entity.getAdditionalDescriptors());
-
                             cloudState.registerEventSourcedEntity(
                                     new AnnotationBasedEventSourcedExtensionSupport(entitySupportFactory, anySupport, entity.getDescriptor()),
                                     entity.getDescriptor(),
@@ -50,16 +49,13 @@ public final class CloudstateUtils {
                                     entity.getAdditionalDescriptors()
                             );
 
-                            /*cloudState.registerEventSourcedEntity(
-                                    entity.getEntityClass(),
-                                    entity.getDescriptor(),
-                                    entity.getAdditionalDescriptors());*/
                             break;
                         case CRDT:
                             cloudState.registerCrdtEntity(
-                                    entity.getEntityClass(),
+                                    new AnnotationBasedCrdtExtensionSupport(entitySupportFactory, anySupport, entity.getDescriptor()),
                                     entity.getDescriptor(),
                                     entity.getAdditionalDescriptors());
+
                             break;
                         default:
                             throw new IllegalArgumentException(
@@ -74,7 +70,7 @@ public final class CloudstateUtils {
         return cloudState;
     }
 
-    public static Object postConstructObject(Object obj, EventSourcedEntityCreationContext eventSourcedEntityCreationContext, String entityId){
+    public static Object postConstructObject(Object obj, Context eventSourcedEntityCreationContext, String entityId){
         final Field[] fields = obj.getClass().getDeclaredFields();
         for (Field field: fields){
             LOG.trace("Field: {}", field);
@@ -102,7 +98,7 @@ public final class CloudstateUtils {
         }
     }
 
-    public static void setCloudstateContext(EventSourcedEntityCreationContext eventSourcedEntityCreationContext, Object obj, Field field) {
+    public static void setCloudstateContext(Context eventSourcedEntityCreationContext, Object obj, Field field) {
         if (field.isAnnotationPresent(CloudstateContext.class) && Objects.nonNull(eventSourcedEntityCreationContext)) {
             field.setAccessible(true);
             try {
