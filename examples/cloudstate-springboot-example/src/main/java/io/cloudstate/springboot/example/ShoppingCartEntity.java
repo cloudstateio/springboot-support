@@ -6,11 +6,8 @@ import com.google.protobuf.Descriptors;
 import com.google.protobuf.Empty;
 import io.cloudstate.javasupport.EntityId;
 import io.cloudstate.javasupport.eventsourced.*;
-import io.cloudstate.springboot.starter.CloudstateContext;
-import io.cloudstate.springboot.starter.CloudstateEntityBean;
 import io.cloudstate.springboot.starter.EntityAdditionaDescriptors;
 import io.cloudstate.springboot.starter.EntityServiceDescriptor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -20,21 +17,14 @@ import java.util.stream.Collectors;
  * An event sourced entity.
  */
 @EventSourcedEntity
-@CloudstateEntityBean
 public class ShoppingCartEntity {
+
+    private final String entityId;
     private final Map<String, Shoppingcart.LineItem> cart = new LinkedHashMap<>();
 
-    @EntityId
-    private String entityId;
-
-    @CloudstateContext
-    private EventSourcedContext context;
-
-    @Autowired
-    private RuleService ruleService;
-
-    @Autowired
-    private ShoppingCartTypeConverter typeConverter;
+    public ShoppingCartEntity(@EntityId String entityId) {
+        this.entityId = entityId;
+    }
 
     @EntityServiceDescriptor
     public static Descriptors.ServiceDescriptor getDescriptor() {
@@ -49,7 +39,7 @@ public class ShoppingCartEntity {
     @Snapshot
     public Domain.Cart snapshot() {
         return Domain.Cart.newBuilder()
-                .addAllItems(cart.values().stream().map(typeConverter::convert).collect(Collectors.toList()))
+                .addAllItems(cart.values().stream().map(this::convert).collect(Collectors.toList()))
                 .build();
     }
 
@@ -57,7 +47,7 @@ public class ShoppingCartEntity {
     public void handleSnapshot(Domain.Cart cart) {
         this.cart.clear();
         for (Domain.LineItem item : cart.getItemsList()) {
-            this.cart.put(item.getProductId(), typeConverter.convert(item));
+            this.cart.put(item.getProductId(), convert(item));
         }
     }
 
@@ -65,7 +55,7 @@ public class ShoppingCartEntity {
     public void itemAdded(Domain.ItemAdded itemAdded) {
         Shoppingcart.LineItem item = cart.get(itemAdded.getItem().getProductId());
         if (item == null) {
-            item = typeConverter.convert(itemAdded.getItem());
+            item = convert(itemAdded.getItem());
         } else {
             item =
                     item.toBuilder()
@@ -87,7 +77,7 @@ public class ShoppingCartEntity {
 
     @CommandHandler
     public Empty addItem(Shoppingcart.AddLineItem item, CommandContext ctx) {
-        if (!ruleService.isValidAmount(item)) {
+        if (item.getQuantity() <= 0) {
             ctx.fail("Cannot add negative quantity of to item" + item.getProductId());
         }
         ctx.emit(
@@ -111,5 +101,19 @@ public class ShoppingCartEntity {
         return Empty.getDefaultInstance();
     }
 
+    private Shoppingcart.LineItem convert(Domain.LineItem item) {
+        return Shoppingcart.LineItem.newBuilder()
+                .setProductId(item.getProductId())
+                .setName(item.getName())
+                .setQuantity(item.getQuantity())
+                .build();
+    }
 
+    private Domain.LineItem convert(Shoppingcart.LineItem item) {
+        return Domain.LineItem.newBuilder()
+                .setProductId(item.getProductId())
+                .setName(item.getName())
+                .setQuantity(item.getQuantity())
+                .build();
+    }
 }
