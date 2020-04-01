@@ -34,7 +34,7 @@ public class CloudstateAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public CloudState cloudState(CloudstateEntityScan entityScan) throws Exception {
-        return register(entityScan);
+        return register(context, entityScan);
     }
 
 }

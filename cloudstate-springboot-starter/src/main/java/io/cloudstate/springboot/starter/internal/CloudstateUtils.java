@@ -1,11 +1,20 @@
 package io.cloudstate.springboot.starter.internal;
 
+import com.google.protobuf.Descriptors;
 import io.cloudstate.javasupport.CloudState;
+import io.cloudstate.javasupport.EntityId;
+import io.cloudstate.javasupport.EntitySupportFactory;
+import io.cloudstate.javasupport.eventsourced.EventSourcedEntity;
+import io.cloudstate.javasupport.eventsourced.EventSourcedEntityCreationContext;
+import io.cloudstate.javasupport.impl.AnySupport;
+import io.cloudstate.javasupport.impl.eventsourced.AnnotationBasedEventSourcedExtensionSupport;
+import io.cloudstate.springboot.starter.CloudstateContext;
 import io.cloudstate.springboot.starter.autoconfigure.CloudstateProperties;
 import io.cloudstate.springboot.starter.internal.scan.CloudstateEntityScan;
 import io.cloudstate.springboot.starter.internal.scan.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -14,23 +23,37 @@ public final class CloudstateUtils {
     private static final Logger LOG = LoggerFactory.getLogger(CloudstateUtils.class);
     public static final String CLOUDSTATE_SPRINGBOOT_SUPPORT = "cloudstate-springboot-support";
 
-    public static CloudState register(CloudstateEntityScan entityScan) throws Exception {
+    public static CloudState register(ApplicationContext applicationContext, CloudstateEntityScan entityScan) throws Exception {
         // Setting environments before create Cloudstate server
         setServerOptions(entityScan);
         CloudState cloudState = new CloudState();
         final List<Entity> entities = entityScan.findEntities();
 
         if (Objects.nonNull(entities) && !entities.isEmpty()){
+
             entities.forEach(entity -> {
+                EntitySupportFactory entitySupportFactory = new BaseEntitySupportFactory(entity, applicationContext);
 
                 if (Objects.nonNull(entity.getDescriptor())) {
                     switch (entity.getEntityType()) {
 
                         case EventSourced:
+
+                            Class<?> entityClass = entitySupportFactory.typeClass();
+                            AnySupport anySupport = newAnySupport(entity.getAdditionalDescriptors());
+
                             cloudState.registerEventSourcedEntity(
+                                    new AnnotationBasedEventSourcedExtensionSupport(entitySupportFactory, anySupport, entity.getDescriptor()),
+                                    entity.getDescriptor(),
+                                    getPersistenceId(entityClass),
+                                    getSnapshotEvery(entityClass),
+                                    entity.getAdditionalDescriptors()
+                            );
+
+                            /*cloudState.registerEventSourcedEntity(
                                     entity.getEntityClass(),
                                     entity.getDescriptor(),
-                                    entity.getAdditionalDescriptors());
+                                    entity.getAdditionalDescriptors());*/
                             break;
                         case CRDT:
                             cloudState.registerCrdtEntity(
@@ -49,6 +72,65 @@ public final class CloudstateUtils {
             });
         }
         return cloudState;
+    }
+
+    public static Object postConstructObject(Object obj, EventSourcedEntityCreationContext eventSourcedEntityCreationContext, String entityId){
+        final Field[] fields = obj.getClass().getDeclaredFields();
+        for (Field field: fields){
+            LOG.trace("Field: {}", field);
+            setEntityId(entityId, obj, field);
+            setCloudstateContext(eventSourcedEntityCreationContext, obj, field);
+        }
+
+        return obj;
+    }
+
+    public static void setEntityId(String entityId, Object obj, Field field) {
+        if (field.isAnnotationPresent(EntityId.class)) {
+            field.setAccessible(true);
+            try {
+                if (field.getType().equals(String.class)) {
+                    LOG.debug("Set the EntityId: {}", entityId);
+                    field.set(obj, entityId);
+                } else {
+                    LOG.warn("Type of Field annotated with @EntityId must be String.class");
+                }
+            } catch (IllegalAccessException e) {
+                LOG.error("");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void setCloudstateContext(EventSourcedEntityCreationContext eventSourcedEntityCreationContext, Object obj, Field field) {
+        if (field.isAnnotationPresent(CloudstateContext.class) && Objects.nonNull(eventSourcedEntityCreationContext)) {
+            field.setAccessible(true);
+            try {
+                LOG.debug("Set the EventSourcedEntityCreationContext: {}", eventSourcedEntityCreationContext);
+                field.set(obj, eventSourcedEntityCreationContext);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static String getPersistenceId(Class<?> entityClass) {
+        EventSourcedEntity ann = entityClass.getAnnotation(EventSourcedEntity.class);
+        String p = Optional.ofNullable(ann.persistenceId()).orElse("");
+        return ( p.trim().isEmpty() ? entityClass.getSimpleName() : p );
+    }
+
+    private static int getSnapshotEvery(Class<?> entityClass) {
+        EventSourcedEntity ann = entityClass.getAnnotation(EventSourcedEntity.class);
+        return ann.snapshotEvery();
+    }
+
+    private static AnySupport newAnySupport(Descriptors.FileDescriptor[] descriptors) {
+        return new AnySupport(
+                descriptors,
+                CloudstateUtils.class.getClassLoader(),
+                AnySupport.DefaultTypeUrlPrefix(),
+                AnySupport.PREFER_JAVA());
     }
 
     private static void setServerOptions(CloudstateEntityScan entityScan) throws Exception {
@@ -97,4 +179,5 @@ public final class CloudstateUtils {
             }
         }
     }
+
 }
