@@ -497,6 +497,15 @@ The other way is to use the created entity class itself and declare some annotat
 We prefer that you adopt the version based on the Spring conventions using configuration classes as in the 
 Getting Started example.
 
+### JSR330
+
+The Cloudastate Springboot Support library supports JSR330 within the scope of the support provided by Spring itself to 
+this specification.
+Note that the Cloudstate Java Support library on which we depend allows you to bind Cloudstate and any other DI container 
+you want. However, no specific module for any of these other containers has yet been made.
+
+Feel free to contribute or suggest support for more runtimes.
+
 ### Using properties instead constructors
 
 Unfortunately in this present version of the library we do not support injection via constructors. 
