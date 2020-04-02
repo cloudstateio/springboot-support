@@ -5,7 +5,8 @@
 1. [Getting Started](#getting-started)
 2. [Configuration](#configuration)
 3. [Context Injection](#context-injection)
-4. [Running via Cloudstate CLI](#running-via-cloudstate-cli)
+4. [Conventions_and_Restrictions](#conventions-and-restrictions)
+5. [Running via Cloudstate CLI](#running-via-cloudstate-cli)
 
 ## Getting Started
 ***Note: This getting started is based on the official Cloudstate example from shopping-cart. For more information consult the [official documentation](https://cloudstate.io/docs/).***
@@ -197,36 +198,33 @@ Here we have an example of a pom.xml file with all the necessary parts present:
 </project>
 ```
 
-Write your Cloudstate function as normal:
+Write your Cloudstate function:
 
 ```java
 /**
  * An event sourced entity.
  */
 @EventSourcedEntity
+@CloudstateEntityBean
 public class ShoppingCartEntity {
-
-    private final String entityId;
     private final Map<String, Shoppingcart.LineItem> cart = new LinkedHashMap<>();
 
-    public ShoppingCartEntity(@EntityId String entityId) {
-        this.entityId = entityId;
-    }
+    @EntityId
+    private String entityId;
 
-    @EntityServiceDescriptor
-    public static Descriptors.ServiceDescriptor getDescriptor() {
-        return Shoppingcart.getDescriptor().findServiceByName("ShoppingCart");
-    }
+    @CloudstateContext
+    private EventSourcedContext context;
 
-    @EntityAdditionaDescriptors
-    public static Descriptors.FileDescriptor[] getAdditionalDescriptors() {
-        return new Descriptors.FileDescriptor[]{com.example.shoppingcart.persistence.Domain.getDescriptor()};
-    }
+    @Autowired
+    private RuleService ruleService;
+
+    @Autowired
+    private ShoppingCartTypeConverter typeConverter;
 
     @Snapshot
     public Domain.Cart snapshot() {
         return Domain.Cart.newBuilder()
-                .addAllItems(cart.values().stream().map(this::convert).collect(Collectors.toList()))
+                .addAllItems(cart.values().stream().map(typeConverter::convert).collect(Collectors.toList()))
                 .build();
     }
 
@@ -234,7 +232,7 @@ public class ShoppingCartEntity {
     public void handleSnapshot(Domain.Cart cart) {
         this.cart.clear();
         for (Domain.LineItem item : cart.getItemsList()) {
-            this.cart.put(item.getProductId(), convert(item));
+            this.cart.put(item.getProductId(), typeConverter.convert(item));
         }
     }
 
@@ -242,7 +240,7 @@ public class ShoppingCartEntity {
     public void itemAdded(Domain.ItemAdded itemAdded) {
         Shoppingcart.LineItem item = cart.get(itemAdded.getItem().getProductId());
         if (item == null) {
-            item = convert(itemAdded.getItem());
+            item = typeConverter.convert(itemAdded.getItem());
         } else {
             item =
                     item.toBuilder()
@@ -264,7 +262,7 @@ public class ShoppingCartEntity {
 
     @CommandHandler
     public Empty addItem(Shoppingcart.AddLineItem item, CommandContext ctx) {
-        if (item.getQuantity() <= 0) {
+        if (!ruleService.isValidAmount(item)) {
             ctx.fail("Cannot add negative quantity of to item" + item.getProductId());
         }
         ctx.emit(
@@ -287,41 +285,39 @@ public class ShoppingCartEntity {
         ctx.emit(Domain.ItemRemoved.newBuilder().setProductId(item.getProductId()).build());
         return Empty.getDefaultInstance();
     }
-
-    private Shoppingcart.LineItem convert(Domain.LineItem item) {
-        return Shoppingcart.LineItem.newBuilder()
-                .setProductId(item.getProductId())
-                .setName(item.getName())
-                .setQuantity(item.getQuantity())
-                .build();
-    }
-
-    private Domain.LineItem convert(Shoppingcart.LineItem item) {
-        return Domain.LineItem.newBuilder()
-                .setProductId(item.getProductId())
-                .setName(item.getName())
-                .setQuantity(item.getQuantity())
-                .build();
-    }
 }
 
 ```
+***Don't worry about the details, we'll explain everything later.***
 
-The only thing other than a normal cloudstate function is the need to register the descriptors explicitly:
+To work Cloudstate requires that the descriptors of the protobuf's files are explicitly registered.
+We have two ways to do this one is:
+
+* Via Springboot,  by creating a Spring Configuration class and registering these types accordingly. 
+* And the other way we’ll explain later in Conventions and Restrictions.
+
+Here is an example of a suitable configuration class:
 
 ```java
-    @EntityServiceDescriptor
-    public static Descriptors.ServiceDescriptor getDescriptor() {
+import com.example.shoppingcart.Shoppingcart;
+import com.google.protobuf.Descriptors;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class DescriptorsConfiguration {
+
+    @Bean
+    public Descriptors.ServiceDescriptor shoppingCartEntityServiceDescriptor() {
         return Shoppingcart.getDescriptor().findServiceByName("ShoppingCart");
     }
 
-    @EntityAdditionaDescriptors
-    public static Descriptors.FileDescriptor[] getAdditionalDescriptors() {
+    @Bean
+    public Descriptors.FileDescriptor[] shoppingCartEntityFileDescriptors() {
         return new Descriptors.FileDescriptor[]{com.example.shoppingcart.persistence.Domain.getDescriptor()};
     }
+}
 ```
-***These registration annotations can be used for any type (CRDT's, EventSourced) of Cloudstate function.***
-
 
 Then write your main class in the Spring boot style. 
 Uses the **@EnableCloudstate** annotation to tell Spring what to do:
@@ -422,8 +418,111 @@ cloudstate {
 
 ## Context Injection
 
-Comming soon
+As we saw in the Getting Started example, it is perfectly possible to inject any Bean available in Spring into a 
+Cloudstate entity class.
+It is also possible to use the annotations present in the javax.inject package 
+([JSR330](https://jcp.org/en/jsr/detail?id=330)). 
+The Cloudstate Springboot Support library already includes the necessary dependencies so you don't have to worry about it.
+
+***At the moment we can only inject dependencies via class properties. 
+In Conventions and Restrictions we explain the reasons why.***
+
+You can annotate your entity classes with Spring @Component or @Service annotations but we have created a convenient 
+annotation that we call @CloudstateEntityBean that can be used for that too.
+
+## Conventions and Restrictions
+
+Both Springboot and Cloudstate have some conventions and / or restrictions for creating objects. 
+In the sections below we describe those that are most relevant
+
+### Registering Protobuf Descriptors
+As mentioned earlier, there are two ways to register the protobuf descriptor files and here we will explain each one in 
+detail.
+
+First using the Spring configuration.
+ 
+Spring's bean declaration conventions define that the method name is exactly the name that will be registered in
+the Spring injection container as a qualifier. 
+So if you use method names other than those defined in the Cloudstate Springboot support convention:
+
+ (entity.getSimpleName() + "ServiceDescriptor" for example)
+ 
+***Remembering that the first letter must always be lowercase, as well as the method and variable naming convention in Java***
+
+Then you will need to use the name property of the '**@Bean**' annotation and define the name following these conventions.
+
+If your entity class is called ShoppinCartEntity then you can declare the beans as below:
+
+```java
+
+@Bean(name = "shoppingCartEntityServiceDescriptor")
+public Descriptors.ServiceDescriptor serviceDescriptor() {
+    return Shoppingcart.getDescriptor().findServiceByName("ShoppingCart");
+}
+
+@Bean(name = "shoppingCartEntityFileDescriptors")
+public Descriptors.FileDescriptor[] fileDescriptors() {
+   return new Descriptors.FileDescriptor[] {com.example.shoppingcart.persistence.Domain.getDescriptor()};
+}
+```
+
+Or like this:
+
+```java
+@Bean
+public Descriptors.ServiceDescriptor shoppingCartEntityServiceDescriptor() {
+   return Shoppingcart.getDescriptor().findServiceByName("ShoppingCart");
+}
+
+@Bean
+public Descriptors.FileDescriptor[] shoppingCartEntityFileDescriptors() {
+    return new Descriptors.FileDescriptor[] {com.example.shoppingcart.persistence.Domain.getDescriptor()};
+}
+```
+
+The other way is to use the created entity class itself and declare some annotated static methods like the example below:
+
+```java
+    @EntityServiceDescriptor
+    public static Descriptors.ServiceDescriptor getDescriptor() {
+        return Shoppingcart.getDescriptor().findServiceByName("ShoppingCart");
+    }
+
+    @EntityAdditionaDescriptors
+    public static Descriptors.FileDescriptor[] getAdditionalDescriptors() {
+        return new Descriptors.FileDescriptor[]{com.example.shoppingcart.persistence.Domain.getDescriptor()};
+    }
+```
+
+We prefer that you adopt the version based on the Spring conventions using configuration classes as in the 
+Getting Started example.
+
+### Using properties instead constructors
+
+Unfortunately in this present version of the library we do not support injection via constructors. 
+We know that this is not a good practice mainly for creating tests, but due to some characteristics 
+of the life cycle of objects managed by cloudstate java support, we are currently unable to provide support to builders.
+This is not to say that it will always be so and we hope to resolve these issues soon and enable the use of builders 
+in the future.
+
+### Injecting EntityId and Cloudstate Context Objects
+
+You can use the @EntityId annotation to access the managed entity's id.
+It is also possible to have access to the EventSourcedEntityCreationContext created during the activation of the object 
+by Cloudstate. However for this you will need to annotate the Context property with the annotation @CloudstateContext 
+as in the example below:
+
+```
+@EntityId
+private String entityId;
+
+@CloudstateContext
+private EventSourcedContext context;
+```
 
 ## Running via Cloudstate CLI
 
 Comming soon
+
+
+***Have fun :)***
