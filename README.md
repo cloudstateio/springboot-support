@@ -565,7 +565,10 @@ So, as in the example above, you can mix the approaches and get the best of both
 
 ## Running via Cloudstate CLI
 
-Comming soon
+A template to use the Cloudstate CLI is being created and soon it will be possible to create a 'scaffold' of this project via CLI.
+It is clear that for this to happen it is necessary that the [PR](https://github.com/cloudstateio/cloudstate/pull/227) 
+with the proposal of the mechanism that allows 
+this implementation to work is accepted by the Cloudstate team.
 
 
 ***Have fun :)***
