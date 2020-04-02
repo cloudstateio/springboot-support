@@ -526,7 +526,8 @@ private EventSourcedContext context;
 Unfortunately in this present version of the library we do not support injection via constructors. 
 We know that this is not a good practice mainly for creating tests, but due to some characteristics 
 of the life cycle of objects managed by cloudstate java support, we are currently unable to provide support to constructors.
-This is not to say that it will always be so and we hope to resolve these [issue](https://github.com/sleipnir/spring-boot-cloudstate-starter/issues/6) soon and enable the use of builders 
+This is not to say that it will always be so and we hope to resolve these 
+[issue](https://github.com/sleipnir/spring-boot-cloudstate-starter/issues/6) soon and enable the use of constructors 
 in the future.
 
 Obviously this is only a problem if you want to inject EntityId or EventSourcedEntityCreationContext. 
