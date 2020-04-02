@@ -2,7 +2,7 @@ logging:
   level:
     root: ERROR
     org.springframework: INFO
-    io.cloudstate.springboot: DEBUG
+    io.cloudstate.springboot: INFO
 
 io:
   cloudstate:
