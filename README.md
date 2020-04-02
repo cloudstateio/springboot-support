@@ -559,8 +559,8 @@ public final class ShoppingCartEntity {
     //......
 }
 ```
-***As you can see, the injection restriction per builder only applies to EntityId and CreationContext. 
-So just like in the example you can mix the approaches and have the best of both worlds together***
+***As you can see, the constructor injection constraint applies only to EntityId and CreationContext. 
+So, as in the example above, you can mix the approaches and get the best of both worlds together***
 
 ## Running via Cloudstate CLI
 
