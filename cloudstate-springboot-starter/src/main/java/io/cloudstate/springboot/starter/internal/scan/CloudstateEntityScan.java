@@ -10,6 +10,7 @@ import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ScanResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 
 import java.lang.annotation.Annotation;
@@ -83,6 +84,12 @@ public final class CloudstateEntityScan implements EntityScan {
         }
     }
 
+    private String decaptalized(String string) {
+        char c[] = string.toCharArray();
+        c[0] = Character.toLowerCase(c[0]);
+        return new String(c);
+    }
+
     private List<Entity> getEntities(Class<? extends Annotation> annotationType) {
         final List<Class<?>> eventSourcedEntities = getClassAnnotationWith(annotationType);
 
@@ -100,6 +107,19 @@ public final class CloudstateEntityScan implements EntityScan {
                     } catch (IllegalAccessException | InvocationTargetException e) {
                         log.error("Failure on load ServiceDescriptor", e);
                     }
+                } else {
+                    // Then verify if descriptor already declared with bean
+                    try{
+                        String serviceDescriptorBeanName = decaptalized(entity.getSimpleName() + "ServiceDescriptor");
+                        log.trace("Trying bind the ServiceDescriptor {}", serviceDescriptorBeanName);
+                        descriptor = (Descriptors.ServiceDescriptor) this.context
+                                .getBean(serviceDescriptorBeanName);
+                    } catch (Exception nbde) {
+                        if (nbde instanceof NoSuchBeanDefinitionException) {
+                            log.trace("No ServiceDescriptor Found");
+                        }
+                    }
+
                 }
 
                 if (method.isAnnotationPresent(EntityAdditionaDescriptors.class)) {
@@ -109,6 +129,19 @@ public final class CloudstateEntityScan implements EntityScan {
                     } catch (IllegalAccessException | InvocationTargetException e) {
                         log.error("Failure on load AdditionalDescriptors", e);
                     }
+                } else {
+                    // Then verify if descriptor already declared with bean
+                    try {
+                        String fileDescriptorBeanName = decaptalized(entity.getSimpleName() + "FileDescriptors");
+                        log.trace("Trying bind the ServiceDescriptor {}", fileDescriptorBeanName);
+                        additionalDescriptors = (Descriptors.FileDescriptor[]) this.context
+                                .getBean(fileDescriptorBeanName);
+                    }catch (Exception nbde) {
+                        if (nbde instanceof NoSuchBeanDefinitionException) {
+                            log.trace("No FileDescriptor Found");
+                        }
+                    }
+
                 }
             }
 

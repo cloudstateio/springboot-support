@@ -24,10 +24,9 @@ public final class CloudstateUtils {
     private static final Logger LOG = LoggerFactory.getLogger(CloudstateUtils.class);
     public static final String CLOUDSTATE_SPRINGBOOT_SUPPORT = "cloudstate-springboot-support";
 
-    public static CloudState register(ApplicationContext applicationContext, CloudstateEntityScan entityScan) throws Exception {
+    public static CloudState register(CloudState cloudState, ApplicationContext applicationContext, CloudstateEntityScan entityScan) throws Exception {
         // Setting environments before create Cloudstate server
         setServerOptions(entityScan);
-        CloudState cloudState = new CloudState();
         final List<Entity> entities = entityScan.findEntities();
 
         if (Objects.nonNull(entities) && !entities.isEmpty()){
@@ -39,7 +38,6 @@ public final class CloudstateUtils {
 
                 if (Objects.nonNull(entity.getDescriptor())) {
                     switch (entity.getEntityType()) {
-
                         case EventSourced:
                             cloudState.registerEventSourcedEntity(
                                     new AnnotationBasedEventSourcedExtensionSupport(entitySupportFactory, anySupport, entity.getDescriptor()),

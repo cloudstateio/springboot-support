@@ -2,13 +2,16 @@ package io.cloudstate.springboot.example;
 
 import com.example.shoppingcart.Shoppingcart;
 import com.example.shoppingcart.persistence.Domain;
+import com.google.protobuf.Descriptors;
 import com.google.protobuf.Empty;
 import io.cloudstate.javasupport.EntityId;
 import io.cloudstate.javasupport.eventsourced.*;
 import io.cloudstate.springboot.starter.CloudstateContext;
 import io.cloudstate.springboot.starter.CloudstateEntityBean;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.cloudstate.springboot.starter.EntityAdditionaDescriptors;
+import io.cloudstate.springboot.starter.EntityServiceDescriptor;
 
+import javax.inject.Inject;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,11 +30,21 @@ public class ShoppingCartEntity {
     @CloudstateContext
     private EventSourcedContext context;
 
-    @Autowired
+    @Inject
     private RuleService ruleService;
 
-    @Autowired
+    @Inject
     private ShoppingCartTypeConverter typeConverter;
+
+    @EntityServiceDescriptor
+    public static Descriptors.ServiceDescriptor getDescriptor() {
+        return Shoppingcart.getDescriptor().findServiceByName("ShoppingCart");
+    }
+
+    @EntityAdditionaDescriptors
+    public static Descriptors.FileDescriptor[] getAdditionalDescriptors() {
+        return new Descriptors.FileDescriptor[]{com.example.shoppingcart.persistence.Domain.getDescriptor()};
+    }
 
     @Snapshot
     public Domain.Cart snapshot() {
