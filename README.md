@@ -531,9 +531,9 @@ This is not to say that it will always be so and we hope to resolve these
 in the future.
 
 Obviously this is only a problem if you want to inject EntityId or EventSourcedEntityCreationContext. 
-Otherwise, if you want to inject only other Beans from the Spring Context you can use injection via builders as normal.
+Otherwise, if you want to inject only other Beans from the Spring Context you can use injection via constructors as normal.
 
-The builder below would be perfectly acceptable:
+The constructors below would be perfectly acceptable:
 
 ```java
 @EventSourcedEntity
