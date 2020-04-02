@@ -506,6 +506,21 @@ you want. However, no specific module for any of these other containers has yet 
 
 Feel free to contribute or suggest support for more runtimes.
 
+### Injecting EntityId and Cloudstate Context Objects
+
+You can use the @EntityId annotation to access the managed entity's id.
+It is also possible to have access to the EventSourcedEntityCreationContext created during the activation of the object 
+by Cloudstate. However for this you will need to annotate the Context property with the annotation @CloudstateContext 
+as in the example below:
+
+```
+@EntityId
+private String entityId;
+
+@CloudstateContext
+private EventSourcedContext context;
+```
+
 ### Using properties instead constructors
 
 Unfortunately in this present version of the library we do not support injection via constructors. 
@@ -546,22 +561,6 @@ public final class ShoppingCartEntity {
 ```
 ***As you can see, the injection restriction per builder only applies to EntityId and CreationContext. 
 So just like in the example you can mix the approaches and have the best of both worlds together***
-
-
-### Injecting EntityId and Cloudstate Context Objects
-
-You can use the @EntityId annotation to access the managed entity's id.
-It is also possible to have access to the EventSourcedEntityCreationContext created during the activation of the object 
-by Cloudstate. However for this you will need to annotate the Context property with the annotation @CloudstateContext 
-as in the example below:
-
-```
-@EntityId
-private String entityId;
-
-@CloudstateContext
-private EventSourcedContext context;
-```
 
 ## Running via Cloudstate CLI
 

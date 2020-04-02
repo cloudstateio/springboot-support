@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  */
 @EventSourcedEntity
 @CloudstateEntityBean
-public class ShoppingCartEntity {
+public final class ShoppingCartEntity {
     private final Map<String, Shoppingcart.LineItem> cart = new LinkedHashMap<>();
 
     @EntityId
@@ -27,11 +27,15 @@ public class ShoppingCartEntity {
     @CloudstateContext
     private EventSourcedContext context;
 
-    @Autowired
-    private RuleService ruleService;
+    private final RuleService ruleService;
+
+    private final ShoppingCartTypeConverter typeConverter;
 
     @Autowired
-    private ShoppingCartTypeConverter typeConverter;
+    public ShoppingCartEntity(RuleService ruleService, ShoppingCartTypeConverter typeConverter) {
+        this.ruleService = ruleService;
+        this.typeConverter = typeConverter;
+    }
 
     @Snapshot
     public Domain.Cart snapshot() {
