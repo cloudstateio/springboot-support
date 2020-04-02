@@ -511,8 +511,42 @@ Feel free to contribute or suggest support for more runtimes.
 Unfortunately in this present version of the library we do not support injection via constructors. 
 We know that this is not a good practice mainly for creating tests, but due to some characteristics 
 of the life cycle of objects managed by cloudstate java support, we are currently unable to provide support to builders.
-This is not to say that it will always be so and we hope to resolve these issues soon and enable the use of builders 
+This is not to say that it will always be so and we hope to resolve these [issue](https://github.com/sleipnir/spring-boot-cloudstate-starter/issues/6) soon and enable the use of builders 
 in the future.
+
+Obviously this is only a problem if you want to inject EntityId or EventSourcedEntityCreationContext. 
+Otherwise, if you want to inject only other Beans from the Spring Context you can use injection via builders as normal.
+
+The builder below would be perfectly acceptable:
+
+```java
+@EventSourcedEntity
+@CloudstateEntityBean
+public final class ShoppingCartEntity {
+    private final Map<String, Shoppingcart.LineItem> cart = new LinkedHashMap<>();
+
+    @EntityId
+    private String entityId;
+
+    @CloudstateContext
+    private EventSourcedContext context;
+
+    private final RuleService ruleService;
+
+    private final ShoppingCartTypeConverter typeConverter;
+    
+    @Autowired
+    public ShoppingCartEntity(RuleService ruleService, ShoppingCartTypeConverter typeConverter) {
+        this.ruleService = ruleService;
+        this.typeConverter = typeConverter;
+    }
+    
+    //......
+}
+```
+***As you can see, the injection restriction per builder only applies to EntityId and CreationContext. 
+So just like in the example you can mix the approaches and have the best of both worlds together***
+
 
 ### Injecting EntityId and Cloudstate Context Objects
 
