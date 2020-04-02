@@ -5,7 +5,7 @@
 1. [Getting Started](#getting-started)
 2. [Configuration](#configuration)
 3. [Context Injection](#context-injection)
-4. [Conventions_and_Restrictions](#conventions-and-restrictions)
+4. [Conventions and Restrictions](#conventions-and-restrictions)
 5. [Running via Cloudstate CLI](#running-via-cloudstate-cli)
 
 ## Getting Started
