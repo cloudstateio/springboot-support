@@ -344,6 +344,7 @@ Run the application in the same way as you would any other springboot applicatio
 [INFO] Scanning for projects...
 
 
+
   ______  __        ______    __    __   _______       _______.___________.    ___   .___________. _______
  /      ||  |      /  __  \  |  |  |  | |       \     /       |           |   /   \  |           ||   ____|
 |  ,----'|  |     |  |  |  | |  |  |  | |  .--.  |   |   (----`---|  |----`  /  ^  \ `---|  |----`|  |__
@@ -353,20 +354,10 @@ Run the application in the same way as you would any other springboot applicatio
 
 
 Cloudtate v0.4.3
-2020-03-26 17:58:43.970  INFO 6286 --- [           main] io.cloudstate.springboot.example.Main    : Starting Main on sleipnir with PID 6286 (/home/sleipnir/development/workspace/pessoal/cloudstate-repos/spring-boot-cloudstate-starter/examples/cloudstate-springboot-example/target/classes started by root in /home/sleipnir/development/workspace/pessoal/cloudstate-repos/spring-boot-cloudstate-starter)
-2020-03-26 17:58:43.974 DEBUG 6286 --- [           main] io.cloudstate.springboot.example.Main    : Running with Spring Boot v2.2.4.RELEASE, Spring v5.2.3.RELEASE
-2020-03-26 17:58:43.975  INFO 6286 --- [           main] io.cloudstate.springboot.example.Main    : No active profile set, falling back to default profiles: default
-2020-03-26 17:58:45.817 DEBUG 6286 --- [           main] i.c.s.s.i.scan.CloudstateEntityScan      : Registering Entity -> Entity{entityType=EventSourced, entityClass=class io.cloudstate.springboot.example.ShoppingCartEntity, descriptor=com.google.protobuf.Descriptors$ServiceDescriptor@58516c91, additionalDescriptors=[com.google.protobuf.Descriptors$FileDescriptor@7c129ef6]}
-2020-03-26 17:58:45.819 DEBUG 6286 --- [           main] i.c.s.s.i.scan.CloudstateEntityScan      : Entities found in PT1.072779S
-2020-03-26 17:58:46.078  INFO 6286 --- [           main] i.c.s.s.a.CloudstateBeanInitialization   : Starting Cloudstate Server...
-[DEBUG] [03/26/2020 17:58:46.345] [main] [EventStream(akka://StatefulService)] logger log1-Logging$DefaultLogger started
-[DEBUG] [03/26/2020 17:58:46.346] [main] [EventStream(akka://StatefulService)] Default Loggers started
-[DEBUG] [03/26/2020 17:58:46.414] [main] [AkkaSSLConfig(akka://StatefulService)] Initializing AkkaSSLConfig extension...
-[DEBUG] [03/26/2020 17:58:46.415] [main] [AkkaSSLConfig(akka://StatefulService)] buildHostnameVerifier: created hostname verifier: com.typesafe.sslconfig.ssl.DefaultHostnameVerifier@1989e8c6
-[DEBUG] [03/26/2020 17:58:46.723] [main] [akka.actor.ActorSystemImpl(StatefulService)] Binding server using HTTP/2
-2020-03-26 17:58:46.841  INFO 6286 --- [           main] io.cloudstate.springboot.example.Main    : Started Main in 3.255 seconds (JVM running for 3.671)
-[DEBUG] [03/26/2020 17:58:46.847] [StatefulService-akka.actor.default-dispatcher-4] [akka://StatefulService/system/IO-TCP/selectors/$a/0] Successfully bound to /0:0:0:0:0:0:0:0:8080
-
+2020-04-03 14:42:52.090  INFO 14233 --- [           main] io.cloudstate.springboot.example.Main    : Starting Main on sleipnir with PID 14233 (/home/sleipnir/development/workspace/pessoal/cloudstate-repos/spring-boot-cloudstate-starter/examples/cloudstate-springboot-example/target/classes started by root in /home/sleipnir/development/workspace/pessoal/cloudstate-repos/spring-boot-cloudstate-starter)
+2020-04-03 14:42:52.095  INFO 14233 --- [           main] io.cloudstate.springboot.example.Main    : No active profile set, falling back to default profiles: default
+2020-04-03 14:42:53.120  INFO 14233 --- [           main] i.c.s.s.a.CloudstateBeanInitialization   : Starting Cloudstate Server...
+2020-04-03 14:42:53.960  INFO 14233 --- [           main] io.cloudstate.springboot.example.Main    : Started Main in 2.261 seconds (JVM running for 2.623)
 
 ```
 
@@ -389,10 +380,17 @@ logging:
 
 io:
   cloudstate:
-    user-function-interface: "localhost"
     user-function-port: 8080
+    user-function-interface: "localhost"
+    user-function-package-name: "io.cloudstate.springboot.example"
 
 ```
+***Cloudstate Springboot Support uses Classpath scanning to assist in the registration step of entity functions, 
+you can explicitly specify in which package the system should look for its entities. 
+This can speed up the application's bootstrap by more than a second in most cases.
+To define your package use the user-function-package-name property as done in the example above. 
+This property is only available for spring configuration files (application.yml or application.properties).***
+
 
 ***application.conf:***
 ```json
@@ -415,6 +413,8 @@ cloudstate {
   }
 }
 ```
+
+
 
 ## Context Injection
 

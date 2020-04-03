@@ -11,7 +11,10 @@ import io.github.classgraph.ScanResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.type.filter.AnnotationTypeFilter;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -19,6 +22,9 @@ import java.lang.reflect.Method;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -79,9 +85,39 @@ public final class CloudstateEntityScan implements EntityScan {
     }
 
     private List<Class<?>> getClassAnnotationWith(Class<? extends Annotation> annotationType) {
-        try (ScanResult result = classGraph.scan()) {
-            return result.getClassesWithAnnotation(annotationType.getName()).loadClasses();
+        if ( Objects.nonNull(properties.getUserFunctionPackageName()) ) {
+            ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
+            scanner.addIncludeFilter(new AnnotationTypeFilter(annotationType));
+            Set<BeanDefinition> definitions = scanner.findCandidateComponents(properties.getUserFunctionPackageName());
+
+            return definitions.stream()
+                    .map(getBeanDefinitionClass())
+                    .filter(this::isaEntityFunction)
+                    .collect(Collectors.toList());
+        } else {
+            try (ScanResult result = classGraph.scan()) {
+                return result.getClassesWithAnnotation(annotationType.getName()).loadClasses();
+            }
         }
+
+    }
+
+    private boolean isaEntityFunction(Class<?> t) {
+        return !EmptyCLass.class.getSimpleName().equals(t.getClass().getSimpleName());
+    }
+
+    private Function<BeanDefinition, Class<?>> getBeanDefinitionClass() {
+        return beanDefinition -> {
+            String className = beanDefinition.getBeanClassName();
+            String packageName = className.substring(0,className.lastIndexOf('.'));
+            log.debug("PackageName: {} ClassName: {}", packageName, className);
+            try {
+                return Class.forName(className);
+            } catch (ClassNotFoundException e) {
+                log.error("Error during entity function discovery phase", e);
+            }
+            return EmptyCLass.class;
+        };
     }
 
     private String decaptalized(String string) {
@@ -150,6 +186,8 @@ public final class CloudstateEntityScan implements EntityScan {
             return entityType;
         }).collect(Collectors.toList());
     }
+
+    final class EmptyCLass {}
 
 }
 

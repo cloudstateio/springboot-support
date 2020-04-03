@@ -10,6 +10,8 @@ public final class CloudstateProperties {
     private String userFunctionInterface = USER_FUNCTION_INTERFACE_DEFAULT;
     private int userFunctionPort = USER_FUNCTION_PORT;
 
+    private String userFunctionPackageName;
+
     public String getUserFunctionInterface() {
         return userFunctionInterface;
     }
@@ -24,5 +26,13 @@ public final class CloudstateProperties {
 
     public void setUserFunctionPort(int userFunctionPort) {
         this.userFunctionPort = userFunctionPort;
+    }
+
+    public String getUserFunctionPackageName() {
+        return userFunctionPackageName;
+    }
+
+    public void setUserFunctionPackageName(String userFunctionPackageName) {
+        this.userFunctionPackageName = userFunctionPackageName;
     }
 }
