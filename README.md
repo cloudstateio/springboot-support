@@ -361,6 +361,33 @@ Cloudtate v0.4.3
 
 ```
 
+Or via docker after build:
+
+```shell script
+[sleipnir@sleipnir spring-boot-cloudstate-starter]# docker run --rm --name shoppingcart-spring --net=host sleipnir/cloudstate-boot-example:0.4.3
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/app/libs/logback-classic-1.2.3.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/app/libs/slf4j-simple-1.7.26.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [ch.qos.logback.classic.util.ContextSelectorStaticBinder]
+
+
+  ______  __        ______    __    __   _______       _______.___________.    ___   .___________. _______
+ /      ||  |      /  __  \  |  |  |  | |       \     /       |           |   /   \  |           ||   ____|
+|  ,----'|  |     |  |  |  | |  |  |  | |  .--.  |   |   (----`---|  |----`  /  ^  \ `---|  |----`|  |__
+|  |     |  |     |  |  |  | |  |  |  | |  |  |  |    \   \       |  |      /  /_\  \    |  |     |   __|
+|  `----.|  `----.|  `--'  | |  `--'  | |  '--'  |.----)   |      |  |     /  _____  \   |  |     |  |____
+ \______||_______| \______/   \______/  |_______/ |_______/       |__|    /__/     \__\  |__|     |_______|
+
+
+Cloudtate v0.4.3
+2020-04-03 20:23:14.341  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : Starting Main on sleipnir with PID 1 (/app/classes started by root in /)
+2020-04-03 20:23:14.343  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : No active profile set, falling back to default profiles: default
+2020-04-03 20:23:15.060  INFO 1 --- [           main] i.c.s.s.a.CloudstateBeanInitialization   : Starting Cloudstate Server...
+2020-04-03 20:23:15.812  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : Started Main in 1.791 seconds (JVM running for 2.062)
+
+```
+
 The complete source code can be found [here](/examples/cloudstate-springboot-example).
 
 ## Configuration
