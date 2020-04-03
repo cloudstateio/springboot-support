@@ -4,6 +4,10 @@ logging:
     org.springframework: INFO
     io.cloudstate.springboot: INFO
 
+spring:
+  main:
+    lazy-initialization: true
+
 io:
   cloudstate:
     user-function-port: 8080
