@@ -2,9 +2,14 @@ logging:
   level:
     root: ERROR
     org.springframework: INFO
-    io.cloudstate.springboot: DEBUG
+    io.cloudstate.springboot: INFO
+
+spring:
+  main:
+    lazy-initialization: true
 
 io:
   cloudstate:
-    user-function-interface: "127.0.0.1"
     user-function-port: 8080
+    user-function-interface: "127.0.0.1"
+    user-function-package-name: "io.cloudstate.springboot.example"

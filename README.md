@@ -5,7 +5,8 @@
 1. [Getting Started](#getting-started)
 2. [Configuration](#configuration)
 3. [Context Injection](#context-injection)
-4. [Running via Cloudstate CLI](#running-via-cloudstate-cli)
+4. [Conventions and Restrictions](#conventions-and-restrictions)
+5. [Running via Cloudstate CLI](#running-via-cloudstate-cli)
 
 ## Getting Started
 ***Note: This getting started is based on the official Cloudstate example from shopping-cart. For more information consult the [official documentation](https://cloudstate.io/docs/).***
@@ -197,36 +198,33 @@ Here we have an example of a pom.xml file with all the necessary parts present:
 </project>
 ```
 
-Write your Cloudstate function as normal:
+Write your Cloudstate function:
 
 ```java
 /**
  * An event sourced entity.
  */
 @EventSourcedEntity
+@CloudstateEntityBean
 public class ShoppingCartEntity {
-
-    private final String entityId;
     private final Map<String, Shoppingcart.LineItem> cart = new LinkedHashMap<>();
 
-    public ShoppingCartEntity(@EntityId String entityId) {
-        this.entityId = entityId;
-    }
+    @EntityId
+    private String entityId;
 
-    @EntityServiceDescriptor
-    public static Descriptors.ServiceDescriptor getDescriptor() {
-        return Shoppingcart.getDescriptor().findServiceByName("ShoppingCart");
-    }
+    @CloudstateContext
+    private EventSourcedContext context;
 
-    @EntityAdditionaDescriptors
-    public static Descriptors.FileDescriptor[] getAdditionalDescriptors() {
-        return new Descriptors.FileDescriptor[]{com.example.shoppingcart.persistence.Domain.getDescriptor()};
-    }
+    @Autowired
+    private RuleService ruleService;
+
+    @Autowired
+    private ShoppingCartTypeConverter typeConverter;
 
     @Snapshot
     public Domain.Cart snapshot() {
         return Domain.Cart.newBuilder()
-                .addAllItems(cart.values().stream().map(this::convert).collect(Collectors.toList()))
+                .addAllItems(cart.values().stream().map(typeConverter::convert).collect(Collectors.toList()))
                 .build();
     }
 
@@ -234,7 +232,7 @@ public class ShoppingCartEntity {
     public void handleSnapshot(Domain.Cart cart) {
         this.cart.clear();
         for (Domain.LineItem item : cart.getItemsList()) {
-            this.cart.put(item.getProductId(), convert(item));
+            this.cart.put(item.getProductId(), typeConverter.convert(item));
         }
     }
 
@@ -242,7 +240,7 @@ public class ShoppingCartEntity {
     public void itemAdded(Domain.ItemAdded itemAdded) {
         Shoppingcart.LineItem item = cart.get(itemAdded.getItem().getProductId());
         if (item == null) {
-            item = convert(itemAdded.getItem());
+            item = typeConverter.convert(itemAdded.getItem());
         } else {
             item =
                     item.toBuilder()
@@ -264,7 +262,7 @@ public class ShoppingCartEntity {
 
     @CommandHandler
     public Empty addItem(Shoppingcart.AddLineItem item, CommandContext ctx) {
-        if (item.getQuantity() <= 0) {
+        if (!ruleService.isValidAmount(item)) {
             ctx.fail("Cannot add negative quantity of to item" + item.getProductId());
         }
         ctx.emit(
@@ -287,41 +285,39 @@ public class ShoppingCartEntity {
         ctx.emit(Domain.ItemRemoved.newBuilder().setProductId(item.getProductId()).build());
         return Empty.getDefaultInstance();
     }
-
-    private Shoppingcart.LineItem convert(Domain.LineItem item) {
-        return Shoppingcart.LineItem.newBuilder()
-                .setProductId(item.getProductId())
-                .setName(item.getName())
-                .setQuantity(item.getQuantity())
-                .build();
-    }
-
-    private Domain.LineItem convert(Shoppingcart.LineItem item) {
-        return Domain.LineItem.newBuilder()
-                .setProductId(item.getProductId())
-                .setName(item.getName())
-                .setQuantity(item.getQuantity())
-                .build();
-    }
 }
 
 ```
+***Don't worry about the details, we'll explain everything later.***
 
-The only thing other than a normal cloudstate function is the need to register the descriptors explicitly:
+To work Cloudstate requires that the descriptors of the protobuf's files are explicitly registered.
+We have two ways to do this one is:
+
+* Via Springboot,  by creating a Spring Configuration class and registering these types accordingly. 
+* And the other way we’ll explain later in Conventions and Restrictions.
+
+Here is an example of a suitable configuration class:
 
 ```java
-    @EntityServiceDescriptor
-    public static Descriptors.ServiceDescriptor getDescriptor() {
+import com.example.shoppingcart.Shoppingcart;
+import com.google.protobuf.Descriptors;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class DescriptorsConfiguration {
+
+    @Bean
+    public Descriptors.ServiceDescriptor shoppingCartEntityServiceDescriptor() {
         return Shoppingcart.getDescriptor().findServiceByName("ShoppingCart");
     }
 
-    @EntityAdditionaDescriptors
-    public static Descriptors.FileDescriptor[] getAdditionalDescriptors() {
+    @Bean
+    public Descriptors.FileDescriptor[] shoppingCartEntityFileDescriptors() {
         return new Descriptors.FileDescriptor[]{com.example.shoppingcart.persistence.Domain.getDescriptor()};
     }
+}
 ```
-***These registration annotations can be used for any type (CRDT's, EventSourced) of Cloudstate function.***
-
 
 Then write your main class in the Spring boot style. 
 Uses the **@EnableCloudstate** annotation to tell Spring what to do:
@@ -348,6 +344,7 @@ Run the application in the same way as you would any other springboot applicatio
 [INFO] Scanning for projects...
 
 
+
   ______  __        ______    __    __   _______       _______.___________.    ___   .___________. _______
  /      ||  |      /  __  \  |  |  |  | |       \     /       |           |   /   \  |           ||   ____|
 |  ,----'|  |     |  |  |  | |  |  |  | |  .--.  |   |   (----`---|  |----`  /  ^  \ `---|  |----`|  |__
@@ -357,20 +354,37 @@ Run the application in the same way as you would any other springboot applicatio
 
 
 Cloudtate v0.4.3
-2020-03-26 17:58:43.970  INFO 6286 --- [           main] io.cloudstate.springboot.example.Main    : Starting Main on sleipnir with PID 6286 (/home/sleipnir/development/workspace/pessoal/cloudstate-repos/spring-boot-cloudstate-starter/examples/cloudstate-springboot-example/target/classes started by root in /home/sleipnir/development/workspace/pessoal/cloudstate-repos/spring-boot-cloudstate-starter)
-2020-03-26 17:58:43.974 DEBUG 6286 --- [           main] io.cloudstate.springboot.example.Main    : Running with Spring Boot v2.2.4.RELEASE, Spring v5.2.3.RELEASE
-2020-03-26 17:58:43.975  INFO 6286 --- [           main] io.cloudstate.springboot.example.Main    : No active profile set, falling back to default profiles: default
-2020-03-26 17:58:45.817 DEBUG 6286 --- [           main] i.c.s.s.i.scan.CloudstateEntityScan      : Registering Entity -> Entity{entityType=EventSourced, entityClass=class io.cloudstate.springboot.example.ShoppingCartEntity, descriptor=com.google.protobuf.Descriptors$ServiceDescriptor@58516c91, additionalDescriptors=[com.google.protobuf.Descriptors$FileDescriptor@7c129ef6]}
-2020-03-26 17:58:45.819 DEBUG 6286 --- [           main] i.c.s.s.i.scan.CloudstateEntityScan      : Entities found in PT1.072779S
-2020-03-26 17:58:46.078  INFO 6286 --- [           main] i.c.s.s.a.CloudstateBeanInitialization   : Starting Cloudstate Server...
-[DEBUG] [03/26/2020 17:58:46.345] [main] [EventStream(akka://StatefulService)] logger log1-Logging$DefaultLogger started
-[DEBUG] [03/26/2020 17:58:46.346] [main] [EventStream(akka://StatefulService)] Default Loggers started
-[DEBUG] [03/26/2020 17:58:46.414] [main] [AkkaSSLConfig(akka://StatefulService)] Initializing AkkaSSLConfig extension...
-[DEBUG] [03/26/2020 17:58:46.415] [main] [AkkaSSLConfig(akka://StatefulService)] buildHostnameVerifier: created hostname verifier: com.typesafe.sslconfig.ssl.DefaultHostnameVerifier@1989e8c6
-[DEBUG] [03/26/2020 17:58:46.723] [main] [akka.actor.ActorSystemImpl(StatefulService)] Binding server using HTTP/2
-2020-03-26 17:58:46.841  INFO 6286 --- [           main] io.cloudstate.springboot.example.Main    : Started Main in 3.255 seconds (JVM running for 3.671)
-[DEBUG] [03/26/2020 17:58:46.847] [StatefulService-akka.actor.default-dispatcher-4] [akka://StatefulService/system/IO-TCP/selectors/$a/0] Successfully bound to /0:0:0:0:0:0:0:0:8080
+2020-04-03 14:42:52.090  INFO 14233 --- [           main] io.cloudstate.springboot.example.Main    : Starting Main on sleipnir with PID 14233 (/home/sleipnir/development/workspace/pessoal/cloudstate-repos/spring-boot-cloudstate-starter/examples/cloudstate-springboot-example/target/classes started by root in /home/sleipnir/development/workspace/pessoal/cloudstate-repos/spring-boot-cloudstate-starter)
+2020-04-03 14:42:52.095  INFO 14233 --- [           main] io.cloudstate.springboot.example.Main    : No active profile set, falling back to default profiles: default
+2020-04-03 14:42:53.120  INFO 14233 --- [           main] i.c.s.s.a.CloudstateBeanInitialization   : Starting Cloudstate Server...
+2020-04-03 14:42:53.960  INFO 14233 --- [           main] io.cloudstate.springboot.example.Main    : Started Main in 2.261 seconds (JVM running for 2.623)
 
+```
+
+Or via docker after build:
+
+```shell script
+[sleipnir@sleipnir spring-boot-cloudstate-starter]# docker run --rm --name shoppingcart-spring --net=host sleipnir/cloudstate-boot-example:0.4.3
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/app/libs/logback-classic-1.2.3.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/app/libs/slf4j-simple-1.7.26.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [ch.qos.logback.classic.util.ContextSelectorStaticBinder]
+
+
+  ______  __        ______    __    __   _______       _______.___________.    ___   .___________. _______
+ /      ||  |      /  __  \  |  |  |  | |       \     /       |           |   /   \  |           ||   ____|
+|  ,----'|  |     |  |  |  | |  |  |  | |  .--.  |   |   (----`---|  |----`  /  ^  \ `---|  |----`|  |__
+|  |     |  |     |  |  |  | |  |  |  | |  |  |  |    \   \       |  |      /  /_\  \    |  |     |   __|
+|  `----.|  `----.|  `--'  | |  `--'  | |  '--'  |.----)   |      |  |     /  _____  \   |  |     |  |____
+ \______||_______| \______/   \______/  |_______/ |_______/       |__|    /__/     \__\  |__|     |_______|
+
+
+Cloudtate v0.4.3
+2020-04-03 20:23:14.341  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : Starting Main on sleipnir with PID 1 (/app/classes started by root in /)
+2020-04-03 20:23:14.343  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : No active profile set, falling back to default profiles: default
+2020-04-03 20:23:15.060  INFO 1 --- [           main] i.c.s.s.a.CloudstateBeanInitialization   : Starting Cloudstate Server...
+2020-04-03 20:23:15.812  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : Started Main in 1.791 seconds (JVM running for 2.062)
 
 ```
 
@@ -393,10 +407,17 @@ logging:
 
 io:
   cloudstate:
-    user-function-interface: "localhost"
     user-function-port: 8080
+    user-function-interface: "localhost"
+    user-function-package-name: "io.cloudstate.springboot.example"
 
 ```
+***Cloudstate Springboot Support uses Classpath scanning to assist in the registration step of entity functions, 
+you can explicitly specify in which package the system should look for its entities. 
+This can speed up the application's bootstrap by more than a second in most cases.
+To define your package use the user-function-package-name property as done in the example above. 
+This property is only available for spring configuration files (application.yml or application.properties).***
+
 
 ***application.conf:***
 ```json
@@ -420,10 +441,161 @@ cloudstate {
 }
 ```
 
+
+
 ## Context Injection
 
-Comming soon
+As we saw in the Getting Started example, it is perfectly possible to inject any Bean available in Spring into a 
+Cloudstate entity class.
+It is also possible to use the annotations present in the javax.inject package 
+([JSR330](https://jcp.org/en/jsr/detail?id=330)). 
+The Cloudstate Springboot Support library already includes the necessary dependencies so you don't have to worry about it.
+
+***At the moment we can only inject dependencies via class properties. 
+In Conventions and Restrictions we explain the reasons why.***
+
+You can annotate your entity classes with Spring @Component or @Service annotations but we have created a convenient 
+annotation that we call @CloudstateEntityBean that can be used for that too.
+
+## Conventions and Restrictions
+
+Both Springboot and Cloudstate have some conventions and / or restrictions for creating objects. 
+In the sections below we describe those that are most relevant
+
+### Registering Protobuf Descriptors
+As mentioned earlier, there are two ways to register the protobuf descriptor files and here we will explain each one in 
+detail.
+
+First using the Spring configuration.
+ 
+Spring's bean declaration conventions define that the method name is exactly the name that will be registered in
+the Spring injection container as a qualifier. 
+So if you use method names other than those defined in the Cloudstate Springboot support convention:
+
+ (entity.getSimpleName() + "ServiceDescriptor" for example)
+ 
+***Remembering that the first letter must always be lowercase, as well as the method and variable naming convention in Java***
+
+Then you will need to use the name property of the '**@Bean**' annotation and define the name following these conventions.
+
+If your entity class is called ShoppinCartEntity then you can declare the beans as below:
+
+```java
+
+@Bean(name = "shoppingCartEntityServiceDescriptor")
+public Descriptors.ServiceDescriptor serviceDescriptor() {
+    return Shoppingcart.getDescriptor().findServiceByName("ShoppingCart");
+}
+
+@Bean(name = "shoppingCartEntityFileDescriptors")
+public Descriptors.FileDescriptor[] fileDescriptors() {
+   return new Descriptors.FileDescriptor[] {com.example.shoppingcart.persistence.Domain.getDescriptor()};
+}
+```
+
+Or like this:
+
+```java
+@Bean
+public Descriptors.ServiceDescriptor shoppingCartEntityServiceDescriptor() {
+   return Shoppingcart.getDescriptor().findServiceByName("ShoppingCart");
+}
+
+@Bean
+public Descriptors.FileDescriptor[] shoppingCartEntityFileDescriptors() {
+    return new Descriptors.FileDescriptor[] {com.example.shoppingcart.persistence.Domain.getDescriptor()};
+}
+```
+
+The other way is to use the created entity class itself and declare some annotated static methods like the example below:
+
+```java
+    @EntityServiceDescriptor
+    public static Descriptors.ServiceDescriptor getDescriptor() {
+        return Shoppingcart.getDescriptor().findServiceByName("ShoppingCart");
+    }
+
+    @EntityAdditionaDescriptors
+    public static Descriptors.FileDescriptor[] getAdditionalDescriptors() {
+        return new Descriptors.FileDescriptor[]{com.example.shoppingcart.persistence.Domain.getDescriptor()};
+    }
+```
+
+We prefer that you adopt the version based on the Spring conventions using configuration classes as in the 
+Getting Started example.
+
+### JSR330
+
+The Cloudastate Springboot Support library supports JSR330 within the scope of the support provided by Spring itself to 
+this specification.
+Note that the Cloudstate Java Support library on which we depend allows you to bind Cloudstate and any other DI container 
+you want. However, no specific module for any of these other containers has yet been made.
+
+Feel free to contribute or suggest support for more runtimes.
+
+### Injecting EntityId and Cloudstate Context Objects
+
+You can use the @EntityId annotation to access the managed entity's id.
+It is also possible to have access to the EventSourcedEntityCreationContext created during the activation of the object 
+by Cloudstate. However for this you will need to annotate the Context property with the annotation @CloudstateContext 
+as in the example below:
+
+```
+@EntityId
+private String entityId;
+
+@CloudstateContext
+private EventSourcedContext context;
+```
+
+### Using properties instead constructors
+
+Unfortunately in this present version of the library we do not support injection via constructors. 
+We know that this is not a good practice mainly for creating tests, but due to some characteristics 
+of the life cycle of objects managed by cloudstate java support, we are currently unable to provide support to constructors.
+This is not to say that it will always be so and we hope to resolve these 
+[issue](https://github.com/sleipnir/spring-boot-cloudstate-starter/issues/6) soon and enable the use of constructors 
+in the future.
+
+Obviously this is only a problem if you want to inject EntityId or EventSourcedEntityCreationContext. 
+Otherwise, if you want to inject only other Beans from the Spring Context you can use injection via constructors as normal.
+
+The constructors below would be perfectly acceptable:
+
+```java
+@EventSourcedEntity
+@CloudstateEntityBean
+public final class ShoppingCartEntity {
+    private final Map<String, Shoppingcart.LineItem> cart = new LinkedHashMap<>();
+
+    @EntityId
+    private String entityId;
+
+    @CloudstateContext
+    private EventSourcedContext context;
+
+    private final RuleService ruleService;
+
+    private final ShoppingCartTypeConverter typeConverter;
+    
+    @Autowired
+    public ShoppingCartEntity(RuleService ruleService, ShoppingCartTypeConverter typeConverter) {
+        this.ruleService = ruleService;
+        this.typeConverter = typeConverter;
+    }
+    
+    //......
+}
+```
+***As you can see, the constructor injection constraint applies only to EntityId and CreationContext. 
+So, as in the example above, you can mix the approaches and get the best of both worlds together***
 
 ## Running via Cloudstate CLI
 
-Comming soon
+A template to use the Cloudstate CLI is being created and soon it will be possible to create a 'scaffold' of this project via CLI.
+It is clear that for this to happen it is necessary that the [PR](https://github.com/cloudstateio/cloudstate/pull/227) 
+with the proposal of the mechanism that allows 
+this implementation to work is accepted by the Cloudstate team.
+
+
+***Have fun :)***

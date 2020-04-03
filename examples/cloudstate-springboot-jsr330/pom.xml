@@ -5,7 +5,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>cloudstate-springboot-example</artifactId>
+    <artifactId>cloudstate-springboot-jsr330</artifactId>
 
     <properties>
         <main.class>io.cloudstate.springboot.example.Main</main.class>
@@ -162,12 +162,8 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <from>
-                        <image>adoptopenjdk/openjdk8-openj9:alpine-slim</image>
-                        <credHelper></credHelper>
-                    </from>
                     <to>
-                        <image>sleipnir/cloudstate-boot-example</image>
+                        <image>sleipnir/cloudstate-boot-jsr330</image>
                         <credHelper></credHelper>
                         <tags>
                             <tag>${project.version}</tag>
@@ -176,8 +172,6 @@
                     <container>
                         <mainClass>${main.class}</mainClass>
                         <jvmFlags>
-                            <jvmFlag>-XshareClasses</jvmFlag>
-                            <jvmFlag>-Xquickstart</jvmFlag>
                             <jvmFlag>-XX:+UseG1GC</jvmFlag>
                             <jvmFlag>-XX:+UseStringDeduplication</jvmFlag>
                         </jvmFlags>

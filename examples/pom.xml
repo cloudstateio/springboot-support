@@ -11,6 +11,7 @@
     
     <modules>
         <module>cloudstate-springboot-example</module>
+        <module>cloudstate-springboot-jsr330</module>
     </modules>
 
 </project>
