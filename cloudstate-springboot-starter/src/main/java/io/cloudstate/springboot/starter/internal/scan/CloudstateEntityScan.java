@@ -34,6 +34,7 @@ public final class CloudstateEntityScan implements EntityScan {
     private final ApplicationContext context;
     private final CloudstateProperties properties;
     private final ClassGraph classGraph;
+    private List<Entity> entities;
 
     public CloudstateProperties getProperties() {
         return properties;
@@ -63,6 +64,10 @@ public final class CloudstateEntityScan implements EntityScan {
     }
 
     public List<Entity> findEntities() {
+        if(Objects.nonNull(entities) && !entities.isEmpty()) {
+            return entities;
+        }
+
         Instant now = Instant.now();
         List<Entity> crdtEntities = getCrdtDescriptors();
         List<Entity> eventSourcedEntities = getEventSourcedDescriptors();
@@ -72,8 +77,10 @@ public final class CloudstateEntityScan implements EntityScan {
             log.warn("No declared descriptor");
         }
 
-        return Stream.concat(crdtEntities.stream(), eventSourcedEntities.stream())
+        entities = Stream.concat(crdtEntities.stream(), eventSourcedEntities.stream())
                 .collect(Collectors.toList());
+
+        return entities;
     }
 
     private List<Entity> getCrdtDescriptors() {
@@ -85,10 +92,11 @@ public final class CloudstateEntityScan implements EntityScan {
     }
 
     private List<Class<?>> getClassAnnotationWith(Class<? extends Annotation> annotationType) {
-        if ( Objects.nonNull(properties.getUserFunctionPackageName()) ) {
+        if ( Objects.nonNull(this.properties) && Objects.nonNull(properties.getUserFunctionPackageName()) ) {
+            log.debug("Scanner set for {}", properties.getUserFunctionPackageName());
             ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
             scanner.addIncludeFilter(new AnnotationTypeFilter(annotationType));
-            Set<BeanDefinition> definitions = scanner.findCandidateComponents(properties.getUserFunctionPackageName());
+            Set<BeanDefinition> definitions = scanner.findCandidateComponents(this.properties.getUserFunctionPackageName());
 
             return definitions.stream()
                     .map(getBeanDefinitionClass())

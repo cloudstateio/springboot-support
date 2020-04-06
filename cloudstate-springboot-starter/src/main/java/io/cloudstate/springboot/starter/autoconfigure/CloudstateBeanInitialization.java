@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Map;
 
 import static io.cloudstate.springboot.starter.internal.CloudstateUtils.register;
 
@@ -23,20 +24,29 @@ public class CloudstateBeanInitialization {
     private final CloudState cloudState;
     private final ApplicationContext context;
     private final CloudstateEntityScan entityScan;
+    private final CloudstateProperties properties;
+    private final ThreadLocal<Map<Class<?>, Map<String, Object>>> stateController;
 
     @Autowired
-    public CloudstateBeanInitialization(ApplicationContext context,CloudstateEntityScan entityScan,  CloudState cloudState) {
+    public CloudstateBeanInitialization(
+            ApplicationContext context,
+            ThreadLocal<Map<Class<?>, Map<String, Object>>> stateController,
+            CloudstateEntityScan entityScan,
+            CloudState cloudState,
+            CloudstateProperties properties) {
         this.context = context;
+        this.stateController = stateController;
         this.cloudState = cloudState;
         this.entityScan = entityScan;
+        this.properties = properties;
     }
 
     @EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) throws Exception {
         final Instant start = Instant.now();
-        register(cloudState, context, entityScan);
         log.info("Starting Cloudstate Server...");
-        cloudState.start()
+        register(cloudState, stateController, context, entityScan, properties)
+                .start()
                 .toCompletableFuture()
                 .exceptionally(ex -> {
                     log.error("Failure on Cloudstate Server startup", ex);

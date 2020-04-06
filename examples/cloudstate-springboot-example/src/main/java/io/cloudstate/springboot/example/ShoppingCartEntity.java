@@ -7,8 +7,11 @@ import io.cloudstate.javasupport.EntityId;
 import io.cloudstate.javasupport.eventsourced.*;
 import io.cloudstate.springboot.starter.CloudstateContext;
 import io.cloudstate.springboot.starter.CloudstateEntityBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.PostConstruct;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 @EventSourcedEntity
 @CloudstateEntityBean
 public final class ShoppingCartEntity {
+    Logger log = LoggerFactory.getLogger(ShoppingCartEntity.class);
     private final Map<String, Shoppingcart.LineItem> cart = new LinkedHashMap<>();
 
     @EntityId
@@ -35,6 +39,13 @@ public final class ShoppingCartEntity {
     public ShoppingCartEntity(RuleService ruleService, ShoppingCartTypeConverter typeConverter) {
         this.ruleService = ruleService;
         this.typeConverter = typeConverter;
+    }
+
+    @PostConstruct
+    public void setup() {
+        log.info(
+                "Setup ShoppingCartEntity with EntityId: {}. And EventSourcedContext: {}",
+                entityId, context);
     }
 
     @Snapshot

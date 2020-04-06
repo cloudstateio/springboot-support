@@ -8,4 +8,4 @@ io:
   cloudstate:
     user-function-interface: "localhost"
     user-function-port: 8080
-    user-function-package-name: "io.cloudstate.springboot.example"
+    user-function-package-name: "io.cloudstate.springboot.starter"
