@@ -6,7 +6,8 @@
 2. [Configuration](#configuration)
 3. [Context Injection](#context-injection)
 4. [Conventions and Restrictions](#conventions-and-restrictions)
-5. [Running via Cloudstate CLI](#running-via-cloudstate-cli)
+5. [Forwarding and effects](#forwarding-and-effects)
+6. [Running via Cloudstate CLI](#running-via-cloudstate-cli)
 
 ## Getting Started
 ***Note: This getting started is based on the official Cloudstate example from shopping-cart. For more information consult the [official documentation](https://cloudstate.io/docs/).***
@@ -589,6 +590,47 @@ public final class ShoppingCartEntity {
 ```
 ***As you can see, the constructor injection constraint applies only to EntityId and CreationContext. 
 So, as in the example above, you can mix the approaches and get the best of both worlds together***
+
+## Forwarding and effects
+
+This page documents how to use Cloudstate CRDT effects and forwarding in Java Springboot manner. For high level information on what 
+Cloudstate effects and forwarding is, please read the general 
+[Forwarding and effects](https://cloudstate.io/docs/user/features/effects.html) documentation first.
+Looking up service call references
+
+To forward a command or emit an effect, a reference to the service call that will be invoked needs to be looked up. 
+This can be done using the ServiceCallFactory interface, which is accessible on any context object 
+via the serviceCallFactory() method.
+
+For example, if a user function serves two entity types, a shopping cart, and a CRDT that tracks which items 
+are currently in hot demand, it might want to invoke the ItemAddedToCart command on example.shoppingcart.HotItems 
+as a side effect of the AddItem shopping cart command. This reference can be looked up like so:
+
+```java
+private static Logger log = LoggerFactory.getLogger(ShoppingCartEntity.class);
+
+private final ServiceCallRef<Hotitems.Item> itemAddedToCartRef;
+
+@EntityId
+private String entityId;
+
+@CloudstateContext
+private EventSourcedContext context;
+
+@PostConstruct
+public void setup() {
+    log.info(
+            "Setup ShoppingCartEntity with EntityId: {}. And EventSourcedContext: {}",
+            entityId, context);
+
+    itemAddedToCartRef =
+          ctx.serviceCallFactory()
+              .lookup(
+                  "io.cloudstate.springboot.example.ShoppingCartService", "ItemAddedToCart", Hotitems.Item.class);
+}
+
+```
+This could be looked up in the @PostConstruct annotated method of the entity, for later use, so it doesn’t have to be looked up each time it’s needed.
 
 ## Running via Cloudstate CLI
 

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @EventSourcedEntity
 @CloudstateEntityBean
 public final class ShoppingCartEntity {
-    Logger log = LoggerFactory.getLogger(ShoppingCartEntity.class);
+    private static Logger log = LoggerFactory.getLogger(ShoppingCartEntity.class);
     private final Map<String, Shoppingcart.LineItem> cart = new LinkedHashMap<>();
 
     @EntityId
