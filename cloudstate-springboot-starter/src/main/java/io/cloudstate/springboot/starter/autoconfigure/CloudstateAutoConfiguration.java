@@ -46,10 +46,4 @@ public class CloudstateAutoConfiguration {
         return ThreadLocal.withInitial(ConcurrentHashMap::new);
     }
 
-//    @Bean
-//    public static CloudstateBeanPostProcessor cloudstateBeanPostProcessor(
-//            CloudstateEntityScan cloudstateEntityScan, ThreadLocal<Map<Class<?>, Map<String, Object>>> stateController){
-//        return new CloudstateBeanPostProcessor(cloudstateEntityScan, stateController);
-//    }
-
 }
