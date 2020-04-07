@@ -366,6 +366,18 @@ Or via docker after build:
 
 ```shell script
 [sleipnir@sleipnir spring-boot-cloudstate-starter]# docker run --rm --name shoppingcart-spring --net=host sleipnir/cloudstate-boot-example:0.4.3
+Unable to find image 'sleipnir/cloudstate-boot-example:0.4.3' locally
+0.4.3: Pulling from sleipnir/cloudstate-boot-example
+aad63a933944: Already exists 
+7e9e08010be5: Pull complete 
+125def8f4f2c: Pull complete 
+c2fe10915d96: Pull complete 
+70b87afe104e: Pull complete 
+2f2e42ac6971: Pull complete 
+12be80d74a84: Pull complete 
+46aa73b3d13b: Pull complete 
+Digest: sha256:ed66f472ab0875f0ec25ac5f953fb9e9197cb5e5a9211826630a4853e1cde64d
+Status: Downloaded newer image for sleipnir/cloudstate-boot-example:0.4.3
 SLF4J: Class path contains multiple SLF4J bindings.
 SLF4J: Found binding in [jar:file:/app/libs/logback-classic-1.2.3.jar!/org/slf4j/impl/StaticLoggerBinder.class]
 SLF4J: Found binding in [jar:file:/app/libs/slf4j-simple-1.7.26.jar!/org/slf4j/impl/StaticLoggerBinder.class]
@@ -382,10 +394,14 @@ SLF4J: Actual binding is of type [ch.qos.logback.classic.util.ContextSelectorSta
 
 
 Cloudtate v0.4.3
-2020-04-03 20:23:14.341  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : Starting Main on sleipnir with PID 1 (/app/classes started by root in /)
-2020-04-03 20:23:14.343  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : No active profile set, falling back to default profiles: default
-2020-04-03 20:23:15.060  INFO 1 --- [           main] i.c.s.s.a.CloudstateBeanInitialization   : Starting Cloudstate Server...
-2020-04-03 20:23:15.812  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : Started Main in 1.791 seconds (JVM running for 2.062)
+2020-04-07 02:36:45.496  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : Starting Main on 51f6a1d8328c with PID 1 (/app/classes started by root in /)
+2020-04-07 02:36:45.498  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : No active profile set, falling back to default profiles: default
+2020-04-07 02:36:45.836  INFO 1 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'io.cloudstate-io.cloudstate.springboot.starter.autoconfigure.CloudstateProperties' of type [io.cloudstate.springboot.starter.autoconfigure.CloudstateProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-04-07 02:36:45.837  INFO 1 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'io.cloudstate.springboot.starter.autoconfigure.CloudstateAutoConfiguration' of type [io.cloudstate.springboot.starter.autoconfigure.CloudstateAutoConfiguration$$EnhancerBySpringCGLIB$$1c6cba26] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-04-07 02:36:45.856  INFO 1 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'cloudstateEntityScan' of type [io.cloudstate.springboot.starter.internal.scan.CloudstateEntityScan] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-04-07 02:36:45.861  INFO 1 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'stateController' of type [java.lang.ThreadLocal$SuppliedThreadLocal] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-04-07 02:36:46.098  INFO 1 --- [pool-1-thread-1] i.c.s.s.a.CloudstateBeanInitialization   : Starting Cloudstate Server...
+2020-04-07 02:36:46.109  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : Started Main in 0.934 seconds (JVM running for 1.206)
 
 ```
 
