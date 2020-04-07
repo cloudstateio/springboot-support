@@ -466,6 +466,15 @@ Certain characteristics of the application startup can be regulated using two ot
 * **AutoRegister**: Default ***true***. It establishes that the entities must be registered automatically by the Spring container during its initialization.
 * **AutoStartup**: Default ***true***. Establishes that the Cloudstate server should be started automatically.
 
+Spring application.yml:
+
+```yaml
+io:
+  cloudstate:
+    auto-register: true
+    auto-startup: true
+```
+
 In case these two parameters are set to false then you must register and boot the application manually. Here is an example:
 
 ```java
