@@ -4,10 +4,11 @@
 
 1. [Getting Started](#getting-started)
 2. [Configuration](#configuration)
-3. [Context Injection](#context-injection)
-4. [Conventions and Restrictions](#conventions-and-restrictions)
-5. [Forwarding and effects](#forwarding-and-effects)
-6. [Running via Cloudstate CLI](#running-via-cloudstate-cli)
+3. [Advanced Configuration](#advanced-configuration)
+4. [Context Injection](#context-injection)
+5. [Conventions and Restrictions](#conventions-and-restrictions)
+6. [Forwarding and effects](#forwarding-and-effects)
+7. [Running via Cloudstate CLI](#running-via-cloudstate-cli)
 
 ## Getting Started
 ***Note: This getting started is based on the official Cloudstate example from shopping-cart. For more information consult the [official documentation](https://cloudstate.io/docs/).***
@@ -458,7 +459,79 @@ cloudstate {
 }
 ```
 
+## Advanced Configuration
 
+Certain characteristics of the application startup can be regulated using two other configuration parameters:
+
+* **AutoRegister**: Default ***true***. It establishes that the entities must be registered automatically by the Spring container during its initialization.
+* **AutoStartup**: Default ***true***. Establishes that the Cloudstate server should be started automatically.
+
+In case these two parameters are set to false then you must register and boot the application manually. Here is an example:
+
+```java
+@Component
+public class ManualStartupProcess {
+    
+    @Autowired
+    private ShoppingCartEntity entity;
+    
+    @Autowired
+    private RegistrarService registrarService;
+    
+    @PostConstruct
+    public void boot() throws Exception {
+        //Register entity
+        Cloudstate cloudstate = registrarService.register(entity);
+    
+        // Start the service
+        cloudstate.start()
+            .toCompletableFuture()
+            .exceptionally(ex -> {
+                log.error("Failure on Cloudstate Server startup", ex);
+                return Done.done();
+            })
+            .thenAccept(done -> {
+                log.info("Cloudstate Server start successfully");
+            });
+    }
+
+} 
+```
+
+In the example above we are using an auxiliary service class called RegistrarService to register an entity managed by Spring. 
+However, you may want to register an entity class without any special annotations and that is not managed by Spring. 
+In this case you will have to register your entity in the same way as if you were using the Cloudstate Java Support library directly:
+
+```java
+@Component
+public class ManualStartupProcess {
+    
+    @Autowired
+    private Cloudstate cloudstate;
+    
+    @PostConstruct
+    public void boot() throws Exception {
+    
+        // Register and start the service
+        cloudstate.registerEventSourcedEntity(
+                ShoppingCartEntity.class,
+                Shoppingcart.getDescriptor().findServiceByName("ShoppingCart"))
+            .start()
+            .toCompletableFuture()
+            .exceptionally(ex -> {
+                log.error("Failure on Cloudstate Server startup", ex);
+                return Done.done();
+            })
+            .thenAccept(done -> {
+                log.info("Cloudstate Server start successfully");
+            });
+    }
+
+} 
+```
+
+But, although available, **we discourage the use of these APIs for direct use**, as this library takes care of all these steps 
+automatically for you without any effort on your part.
 
 ## Context Injection
 

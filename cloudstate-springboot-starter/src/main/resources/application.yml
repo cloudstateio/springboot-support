@@ -7,6 +7,7 @@ logging:
 io:
   cloudstate:
     auto-register: true
+    auto-startup: true
     user-function-port: 8080
     user-function-interface: "localhost"
     user-function-package-name: "io.cloudstate.springboot.example"
