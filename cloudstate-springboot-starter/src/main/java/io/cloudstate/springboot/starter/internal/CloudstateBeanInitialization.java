@@ -3,11 +3,10 @@ package io.cloudstate.springboot.starter.internal;
 import akka.Done;
 import io.cloudstate.javasupport.CloudState;
 import io.cloudstate.springboot.starter.autoconfigure.CloudstateProperties;
-import io.cloudstate.springboot.starter.internal.scan.CloudstateEntityScan;
+import io.cloudstate.springboot.starter.autoconfigure.RegistrarService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -16,38 +15,29 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
-
-import static io.cloudstate.springboot.starter.internal.CloudstateUtils.register;
+import java.util.concurrent.Executors;
 
 @Component
 public final class CloudstateBeanInitialization {
     private static final Logger log = LoggerFactory.getLogger(CloudstateBeanInitialization.class);
 
     private final CloudState cloudState;
-    private final ApplicationContext context;
-    private final CloudstateEntityScan entityScan;
     private final CloudstateProperties properties;
-    private final ThreadLocal<Map<Class<?>, Map<String, Object>>> stateController;
+    private final RegistrarService serviceRegister;
 
     private static ExecutorService workerThreadService =
             Executors.newFixedThreadPool(1, new CustomizableThreadFactory("cloudstate-t"));
 
     @Autowired
     public CloudstateBeanInitialization(
-            ApplicationContext context,
-            ThreadLocal<Map<Class<?>, Map<String, Object>>> stateController,
-            CloudstateEntityScan entityScan,
             CloudState cloudState,
+            RegistrarService serviceRegister,
             CloudstateProperties properties) {
-        this.context = context;
-        this.stateController = stateController;
         this.cloudState = cloudState;
-        this.entityScan = entityScan;
         this.properties = properties;
+        this.serviceRegister = serviceRegister;
     }
 
     @EventListener
@@ -57,19 +47,25 @@ public final class CloudstateBeanInitialization {
             log.info("Starting Cloudstate Server...");
             try {
                 if (isAutoRegister()) {
-                    register(cloudState, stateController, context, entityScan, properties);
+                    serviceRegister.registerAllEntities();
+                } else {
+                    log.warn("AutoRegister is set to FALSE. Then Entities must be registered manually");
                 }
 
-                cloudState
-                        .start()
-                        .toCompletableFuture()
-                        .exceptionally(ex -> {
-                            log.error("Failure on Cloudstate Server startup", ex);
-                            return Done.done();
-                        }).thenAccept(done -> {
-                    Duration timeElapsed = Duration.between(start, Instant.now());
-                    log.info("Cloudstate Server keep alive for {}", timeElapsed);
-                }).get();
+                if (isAutoStartup()) {
+                    cloudState
+                            .start()
+                            .toCompletableFuture()
+                            .exceptionally(ex -> {
+                                log.error("Failure on Cloudstate Server startup", ex);
+                                return Done.done();
+                            }).thenAccept(done -> {
+                        Duration timeElapsed = Duration.between(start, Instant.now());
+                        log.info("Cloudstate Server keep alive for {}", timeElapsed);
+                    }).get();
+                } else {
+                    log.warn("AutoStartup is set to FALSE. Then Cloudstate must be started manually");
+                }
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -87,6 +83,10 @@ public final class CloudstateBeanInitialization {
 
     private boolean isAutoRegister() {
         return Objects.nonNull(properties) && properties.isAutoRegister();
+    }
+
+    private boolean isAutoStartup() {
+        return Objects.nonNull(properties) && properties.isAutoStartup();
     }
 
 }

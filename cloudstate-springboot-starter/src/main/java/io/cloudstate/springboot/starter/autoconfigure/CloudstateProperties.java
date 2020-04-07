@@ -8,12 +8,21 @@ public final class CloudstateProperties {
     public final String USER_FUNCTION_INTERFACE_DEFAULT = "127.0.0.1";
 
     private boolean autoRegister = true;
+    private boolean autoStartup = true;
     private String userFunctionInterface = USER_FUNCTION_INTERFACE_DEFAULT;
     private int userFunctionPort = USER_FUNCTION_PORT;
     private String userFunctionPackageName;
 
     public boolean isAutoRegister() {
         return autoRegister;
+    }
+
+    public boolean isAutoStartup() {
+        return autoStartup;
+    }
+
+    public void setAutoStartup(boolean autoStartup) {
+        this.autoStartup = autoStartup;
     }
 
     public void setAutoRegister(boolean autoRegister) {

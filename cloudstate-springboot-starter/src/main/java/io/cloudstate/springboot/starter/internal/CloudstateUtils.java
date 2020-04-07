@@ -19,6 +19,7 @@ import org.springframework.context.ApplicationContext;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public final class CloudstateUtils {
     private static final Logger LOG = LoggerFactory.getLogger(CloudstateUtils.class);
@@ -34,6 +35,64 @@ public final class CloudstateUtils {
         // Setting environments before create Cloudstate server
         setServerOptions(properties);
         final List<Entity> entities = entityScan.findEntities();
+
+        if (Objects.nonNull(entities) && !entities.isEmpty()){
+
+            entities.forEach(entity -> {
+                EntitySupportFactory entitySupportFactory = new BaseEntitySupportFactory(
+                        entity, applicationContext, stateController);
+
+                Class<?> entityClass = entitySupportFactory.typeClass();
+                final AnySupport anySupport = newAnySupport(entity.getAdditionalDescriptors());
+
+                if (Objects.nonNull(entity.getDescriptor())) {
+                    switch (entity.getEntityType()) {
+                        case EventSourced:
+                            cloudState.registerEventSourcedEntity(
+                                    new AnnotationBasedEventSourcedExtensionSupport(
+                                            entitySupportFactory, anySupport, entity.getDescriptor()),
+                                    entity.getDescriptor(),
+                                    getPersistenceId(entityClass),
+                                    getSnapshotEvery(entityClass),
+                                    entity.getAdditionalDescriptors()
+                            );
+
+                            break;
+                        case CRDT:
+                            cloudState.registerCrdtEntity(
+                                    new AnnotationBasedCrdtExtensionSupport(
+                                            entitySupportFactory, anySupport, entity.getDescriptor()),
+                                    entity.getDescriptor(),
+                                    entity.getAdditionalDescriptors());
+
+                            break;
+                        default:
+                            throw new IllegalArgumentException(
+                                    String.format("Unknown entity type %s", entity.getEntityType()));
+                    }
+                } else {
+                    LOG.warn("Entity '{}' was found but no valid ServiceDescriptor was declared",
+                            entity.getEntityClass().getName());
+                }
+            });
+        }
+        return cloudState;
+    }
+
+    public static CloudState register(
+            Object object,
+            CloudState cloudState,
+            ThreadLocal<Map<Class<?>, Map<String, Object>>> stateController,
+            ApplicationContext applicationContext,
+            CloudstateEntityScan entityScan,
+            CloudstateProperties properties) throws Exception {
+
+        // Setting environments before create Cloudstate server
+        setServerOptions(properties);
+        final List<Entity> entities = entityScan.findEntities()
+                .stream()
+                .filter(e -> e.getEntityClass() == object.getClass())
+                .collect(Collectors.toList());
 
         if (Objects.nonNull(entities) && !entities.isEmpty()){
 
