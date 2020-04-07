@@ -4,13 +4,21 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "io.cloudstate")
 public final class CloudstateProperties {
-    public final String USER_FUNCTION_INTERFACE_DEFAULT = "127.0.0.1";
     public final int USER_FUNCTION_PORT = 8080;
+    public final String USER_FUNCTION_INTERFACE_DEFAULT = "127.0.0.1";
 
+    private boolean autoRegister = true;
     private String userFunctionInterface = USER_FUNCTION_INTERFACE_DEFAULT;
     private int userFunctionPort = USER_FUNCTION_PORT;
-
     private String userFunctionPackageName;
+
+    public boolean isAutoRegister() {
+        return autoRegister;
+    }
+
+    public void setAutoRegister(boolean autoRegister) {
+        this.autoRegister = autoRegister;
+    }
 
     public String getUserFunctionInterface() {
         return userFunctionInterface;

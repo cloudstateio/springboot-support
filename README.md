@@ -326,7 +326,7 @@ Uses the **@EnableCloudstate** annotation to tell Spring what to do:
 ```java
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import io.cloudstate.springboot.starter.autoconfigure.EnableCloudstate;
+import io.cloudstate.springboot.starter.EnableCloudstate;
 
 @EnableCloudstate
 @SpringBootApplication

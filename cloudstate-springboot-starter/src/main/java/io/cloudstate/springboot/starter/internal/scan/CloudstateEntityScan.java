@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class CloudstateEntityScan implements EntityScan {
-    Logger log = LoggerFactory.getLogger(CloudstateEntityScan.class);
+    private static final Logger log = LoggerFactory.getLogger(CloudstateEntityScan.class);
 
     private final ApplicationContext context;
     private final CloudstateProperties properties;

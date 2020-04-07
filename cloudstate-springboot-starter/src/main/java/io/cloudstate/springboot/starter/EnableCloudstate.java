@@ -1,5 +1,6 @@
-package io.cloudstate.springboot.starter.autoconfigure;
+package io.cloudstate.springboot.starter;
 
+import io.cloudstate.springboot.starter.autoconfigure.CloudstateAutoConfiguration;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;

@@ -42,9 +42,7 @@ public final class CloudstateBeanPostProcessor implements BeanPostProcessor {
             });
 
         }
-
         return bean;
-
     }
 
     private void setProperties(Object bean, Entity e, Map.Entry<String, Object> entry) {

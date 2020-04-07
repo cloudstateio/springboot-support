@@ -1,7 +1,8 @@
-package io.cloudstate.springboot.starter.autoconfigure;
+package io.cloudstate.springboot.starter.internal;
 
 import akka.Done;
 import io.cloudstate.javasupport.CloudState;
+import io.cloudstate.springboot.starter.autoconfigure.CloudstateProperties;
 import io.cloudstate.springboot.starter.internal.scan.CloudstateEntityScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,14 +17,15 @@ import org.springframework.stereotype.Component;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 
 import static io.cloudstate.springboot.starter.internal.CloudstateUtils.register;
 
 @Component
-public class CloudstateBeanInitialization {
-    Logger log = LoggerFactory.getLogger(CloudstateBeanInitialization.class);
+public final class CloudstateBeanInitialization {
+    private static final Logger log = LoggerFactory.getLogger(CloudstateBeanInitialization.class);
 
     private final CloudState cloudState;
     private final ApplicationContext context;
@@ -54,7 +56,11 @@ public class CloudstateBeanInitialization {
             final Instant start = Instant.now();
             log.info("Starting Cloudstate Server...");
             try {
-                register(cloudState, stateController, context, entityScan, properties)
+                if (isAutoRegister()) {
+                    register(cloudState, stateController, context, entityScan, properties);
+                }
+
+                cloudState
                         .start()
                         .toCompletableFuture()
                         .exceptionally(ex -> {
@@ -62,7 +68,7 @@ public class CloudstateBeanInitialization {
                             return Done.done();
                         }).thenAccept(done -> {
                     Duration timeElapsed = Duration.between(start, Instant.now());
-                    log.debug("Cloudstate Server keep alived for {}", timeElapsed);
+                    log.info("Cloudstate Server keep alive for {}", timeElapsed);
                 }).get();
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -74,7 +80,13 @@ public class CloudstateBeanInitialization {
 
     @EventListener
     public void onApplicationEvent(ContextClosedEvent event) {
-        workerThreadService.shutdown();
+        if (!workerThreadService.isShutdown() || !workerThreadService.isTerminated()) {
+            workerThreadService.shutdown();
+        }
+    }
+
+    private boolean isAutoRegister() {
+        return Objects.nonNull(properties) && properties.isAutoRegister();
     }
 
 }

@@ -11,7 +11,7 @@ import java.util.Map;
 
 import static io.cloudstate.springboot.starter.internal.CloudstateUtils.postConstructObject;
 
-class BaseEntitySupportFactory implements EntitySupportFactory {
+final class BaseEntitySupportFactory implements EntitySupportFactory {
     private static final Logger LOG = LoggerFactory.getLogger(CloudstateUtils.class);
 
     private final Entity entity;
