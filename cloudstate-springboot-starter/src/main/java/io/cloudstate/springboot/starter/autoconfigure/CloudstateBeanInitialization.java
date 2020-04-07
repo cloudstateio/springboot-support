@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
@@ -30,7 +31,8 @@ public class CloudstateBeanInitialization {
     private final CloudstateProperties properties;
     private final ThreadLocal<Map<Class<?>, Map<String, Object>>> stateController;
 
-    private ExecutorService workThread = Executors.newFixedThreadPool(1);
+    private static ExecutorService workerThreadService =
+            Executors.newFixedThreadPool(1, new CustomizableThreadFactory("cloudstate-t"));
 
     @Autowired
     public CloudstateBeanInitialization(
@@ -67,13 +69,12 @@ public class CloudstateBeanInitialization {
             }
         };
 
-        workThread.execute(worker);
-
+        workerThreadService.execute(worker);
     }
 
     @EventListener
     public void onApplicationEvent(ContextClosedEvent event) {
-        workThread.shutdown();
+        workerThreadService.shutdown();
     }
 
 }
