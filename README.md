@@ -394,14 +394,15 @@ SLF4J: Actual binding is of type [ch.qos.logback.classic.util.ContextSelectorSta
 
 
 Cloudtate v0.4.3
-2020-04-07 02:36:45.496  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : Starting Main on 51f6a1d8328c with PID 1 (/app/classes started by root in /)
-2020-04-07 02:36:45.498  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : No active profile set, falling back to default profiles: default
-2020-04-07 02:36:45.836  INFO 1 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'io.cloudstate-io.cloudstate.springboot.starter.autoconfigure.CloudstateProperties' of type [io.cloudstate.springboot.starter.autoconfigure.CloudstateProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-04-07 02:36:45.837  INFO 1 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'io.cloudstate.springboot.starter.autoconfigure.CloudstateAutoConfiguration' of type [io.cloudstate.springboot.starter.autoconfigure.CloudstateAutoConfiguration$$EnhancerBySpringCGLIB$$1c6cba26] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-04-07 02:36:45.856  INFO 1 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'cloudstateEntityScan' of type [io.cloudstate.springboot.starter.internal.scan.CloudstateEntityScan] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-04-07 02:36:45.861  INFO 1 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'stateController' of type [java.lang.ThreadLocal$SuppliedThreadLocal] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-04-07 02:36:46.098  INFO 1 --- [  cloudstate-t1] i.c.s.s.a.CloudstateBeanInitialization   : Starting Cloudstate Server...
-2020-04-07 02:36:46.109  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : Started Main in 0.934 seconds (JVM running for 1.206)
+2020-04-07 16:05:48.371  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : Starting Main on b5ba1455c3c9 with PID 1 (/app/classes started by root in /)
+2020-04-07 16:05:48.373  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : No active profile set, falling back to default profiles: default
+2020-04-07 16:05:48.705  INFO 1 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'io.cloudstate-io.cloudstate.springboot.starter.autoconfigure.CloudstateProperties' of type [io.cloudstate.springboot.starter.autoconfigure.CloudstateProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-04-07 16:05:48.706  INFO 1 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'io.cloudstate.springboot.starter.autoconfigure.CloudstateAutoConfiguration' of type [io.cloudstate.springboot.starter.autoconfigure.CloudstateAutoConfiguration$$EnhancerBySpringCGLIB$$212a4b21] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-04-07 16:05:48.720  INFO 1 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'cloudstateEntityScan' of type [io.cloudstate.springboot.starter.internal.scan.CloudstateEntityScan] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-04-07 16:05:48.722  INFO 1 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'stateController' of type [java.lang.ThreadLocal$SuppliedThreadLocal] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-04-07 16:05:48.935  INFO 1 --- [  cloudstate-t1] i.c.s.s.i.CloudstateBeanInitialization   : Starting Cloudstate Server...
+2020-04-07 16:05:48.943  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : Started Main in 0.89 seconds (JVM running for 1.193)
+
 
 ```
 
@@ -445,7 +446,6 @@ cloudstate {
 
   user-function-port = 8080
   user-function-port = ${?PORT}
-
 
   system {
     akka {
