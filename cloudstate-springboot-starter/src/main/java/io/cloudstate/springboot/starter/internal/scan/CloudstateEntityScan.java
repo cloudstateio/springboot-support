@@ -136,14 +136,27 @@ public final class CloudstateEntityScan implements EntityScan {
 
     private List<Entity> getEntities(Class<? extends Annotation> annotationType) {
         final List<Class<?>> eventSourcedEntities = getClassAnnotationWith(annotationType);
+        return eventSourcedEntities.stream()
+                .map(this::apply)
+                .collect(Collectors.toList());
+    }
 
-        return eventSourcedEntities.stream().map(entity -> {
-            Descriptors.ServiceDescriptor descriptor = null;
-            Descriptors.FileDescriptor[] additionalDescriptors = null;
+    private Entity apply(Class<?> entity) {
+        Descriptors.ServiceDescriptor descriptor = null;
+        Descriptors.FileDescriptor[] additionalDescriptors = null;
 
-            for (Method method: entity.getDeclaredMethods()) {
+        if (isaBeanDescriptorsType()) {
+            // Then verify if descriptor already declared with bean
+            descriptor = tryGetServiceDescriptor(entity, descriptor);
 
-                if (method.isAnnotationPresent(EntityServiceDescriptor.class)){
+            // Then verify if descriptor already declared with bean
+            additionalDescriptors = tryGetFileDescriptors(entity, additionalDescriptors);
+
+        } else {
+
+            for (Method method : entity.getDeclaredMethods()) {
+
+                if (method.isAnnotationPresent(EntityServiceDescriptor.class)) {
                     try {
                         method.setAccessible(true);
                         descriptor = ((Descriptors.ServiceDescriptor)
@@ -151,19 +164,6 @@ public final class CloudstateEntityScan implements EntityScan {
                     } catch (IllegalAccessException | InvocationTargetException e) {
                         log.error("Failure on load ServiceDescriptor", e);
                     }
-                } else {
-                    // Then verify if descriptor already declared with bean
-                    try{
-                        String serviceDescriptorBeanName = decaptalized(entity.getSimpleName() + "ServiceDescriptor");
-                        log.trace("Trying bind the ServiceDescriptor {}", serviceDescriptorBeanName);
-                        descriptor = (Descriptors.ServiceDescriptor) this.context
-                                .getBean(serviceDescriptorBeanName);
-                    } catch (Exception nbde) {
-                        if (nbde instanceof NoSuchBeanDefinitionException) {
-                            log.trace("No ServiceDescriptor Found");
-                        }
-                    }
-
                 }
 
                 if (method.isAnnotationPresent(EntityAdditionaDescriptors.class)) {
@@ -173,26 +173,46 @@ public final class CloudstateEntityScan implements EntityScan {
                     } catch (IllegalAccessException | InvocationTargetException e) {
                         log.error("Failure on load AdditionalDescriptors", e);
                     }
-                } else {
-                    // Then verify if descriptor already declared with bean
-                    try {
-                        String fileDescriptorBeanName = decaptalized(entity.getSimpleName() + "FileDescriptors");
-                        log.trace("Trying bind the ServiceDescriptor {}", fileDescriptorBeanName);
-                        additionalDescriptors = (Descriptors.FileDescriptor[]) this.context
-                                .getBean(fileDescriptorBeanName);
-                    }catch (Exception nbde) {
-                        if (nbde instanceof NoSuchBeanDefinitionException) {
-                            log.trace("No FileDescriptor Found");
-                        }
-                    }
-
                 }
             }
+        }
 
-            Entity entityType = new Entity(EntityType.EventSourced, entity, descriptor, additionalDescriptors);
-            log.debug("Registering Entity -> {}", entityType);
-            return entityType;
-        }).collect(Collectors.toList());
+        Entity entityType = new Entity(EntityType.EventSourced, entity, descriptor, additionalDescriptors);
+        log.debug("Registering Entity -> {}", entityType);
+        return entityType;
+    }
+
+    private Descriptors.FileDescriptor[] tryGetFileDescriptors(Class<?> entity, Descriptors.FileDescriptor[] additionalDescriptors) {
+        try {
+            String fileDescriptorBeanName = decaptalized(entity.getSimpleName() + "FileDescriptors");
+            log.trace("Trying bind the ServiceDescriptor {}", fileDescriptorBeanName);
+            additionalDescriptors = (Descriptors.FileDescriptor[]) this.context
+                    .getBean(fileDescriptorBeanName);
+        }catch (Exception nbde) {
+            if (nbde instanceof NoSuchBeanDefinitionException) {
+                log.trace("No FileDescriptor Found");
+            }
+        }
+        return additionalDescriptors;
+    }
+
+    private Descriptors.ServiceDescriptor tryGetServiceDescriptor(Class<?> entity, Descriptors.ServiceDescriptor descriptor) {
+        try{
+            String serviceDescriptorBeanName = decaptalized(entity.getSimpleName() + "ServiceDescriptor");
+            log.trace("Trying bind the ServiceDescriptor {}", serviceDescriptorBeanName);
+            descriptor = (Descriptors.ServiceDescriptor) this.context
+                    .getBean(serviceDescriptorBeanName);
+        } catch (Exception nbde) {
+            if (nbde instanceof NoSuchBeanDefinitionException) {
+                log.trace("No ServiceDescriptor Found");
+            }
+        }
+        return descriptor;
+    }
+
+    private boolean isaBeanDescriptorsType() {
+        return Objects.nonNull(properties.getUserFunctionPackageName()) &&
+                !properties.getUserFunctionPackageName().isEmpty();
     }
 
     final class EmptyCLass {}
