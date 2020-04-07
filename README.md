@@ -471,8 +471,8 @@ The Cloudstate Springboot Support library already includes the necessary depende
 ***At the moment we can only inject dependencies via class properties. 
 In Conventions and Restrictions we explain the reasons why.***
 
-You can annotate your entity classes with Spring @Component or @Service annotations but we have created a convenient 
-annotation that we call @CloudstateEntityBean that can be used for that too.
+You can annotate your entity classes with Spring ***@Component*** or ***@Service*** annotations but we have created a convenient 
+annotation that we call ***@CloudstateEntityBean*** that can be used for that too.
 
 ## Conventions and Restrictions
 
