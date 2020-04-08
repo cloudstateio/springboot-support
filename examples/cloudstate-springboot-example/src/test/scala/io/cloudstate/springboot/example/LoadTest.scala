@@ -12,15 +12,15 @@ class LoadTest extends Simulation {
   val httpProtocol: HttpProtocolBuilder = http
     .baseUrl("http://localhost:9000")
 
-  object HelloWorldResource {
+  object GetCartResource {
     val get: ChainBuilder = exec(http("GetUserCart")
-      .get("/carts/adriano/items"))
+      .get("/carts/1/items"))
   }
 
-  val myScenario: ScenarioBuilder = scenario("RampUpUsers")
-    .exec(HelloWorldResource.get)
+  val shoppingCartScenario: ScenarioBuilder = scenario("RampUpUsers")
+    .exec(GetCartResource.get)
 
-  setUp(myScenario.inject(
+  setUp(shoppingCartScenario.inject(
     incrementUsersPerSec(20)
       .times(5)
       .eachLevelLasting(5 seconds)
