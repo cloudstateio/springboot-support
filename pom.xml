@@ -7,6 +7,18 @@
     <groupId>io.cloudstate</groupId>
     <artifactId>spring-boot-cloudstate-starter</artifactId>
     <version>0.4.3</version>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <packaging>pom</packaging>
 
     <modules>

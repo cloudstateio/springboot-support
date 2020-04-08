@@ -14,7 +14,7 @@ class LoadTest extends Simulation {
 
   object GetCartResource {
     val get: ChainBuilder = exec(http("GetUserCart")
-      .get("/carts/1/items"))
+      .get("/carts/adriano/items"))
   }
 
   val shoppingCartScenario: ScenarioBuilder = scenario("RampUpUsers")

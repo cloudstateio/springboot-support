@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static junit.framework.TestCase.assertNotNull;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes= CloudstateAutoConfiguration.class)
+@ContextConfiguration(classes=CloudstateAutoConfiguration.class)
 public class ContextLoaderTest {
 
     @Autowired
