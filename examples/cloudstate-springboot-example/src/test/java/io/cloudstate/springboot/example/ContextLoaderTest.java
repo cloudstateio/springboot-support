@@ -34,10 +34,10 @@ public class ContextLoaderTest {
     private static final int PROXY_PORT = 9000;
     private static final String FUNCTION_PORT = "8080";
 
-    private static GenericContainer proxy;
+    private GenericContainer proxy;
 
-    private static ActorSystem system;
-    private static Materializer materializer;
+    private ActorSystem system;
+    private Materializer materializer;
 
     @Autowired
     private RuleService service;
@@ -49,7 +49,7 @@ public class ContextLoaderTest {
 
         proxy = new FixedHostPortGenericContainer("cloudstateio/cloudstate-proxy-native-dev-mode:latest")
                 .withNetworkMode("host")
-                .withExposedPorts(9000)
+                .withExposedPorts(PROXY_PORT)
                 .withEnv("USER_FUNCTION_PORT", FUNCTION_PORT)
                 .withLogConsumer(new Slf4jLogConsumer(log))
                 .waitingFor(

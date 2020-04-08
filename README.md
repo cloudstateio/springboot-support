@@ -814,16 +814,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Main.class)
-public final class IntegrationTest {
+public class ContextLoaderTest {
     private static final Logger log = LoggerFactory.getLogger(ContextLoaderTest.class);
-
     private static final int PROXY_PORT = 9000;
     private static final String FUNCTION_PORT = "8080";
 
-    private static GenericContainer proxy;
+    private GenericContainer proxy;
 
-    private static ActorSystem system;
-    private static Materializer materializer;
+    private ActorSystem system;
+    private Materializer materializer;
 
     @Before
     public void setup(){
@@ -832,20 +831,19 @@ public final class IntegrationTest {
 
         proxy = new FixedHostPortGenericContainer("cloudstateio/cloudstate-proxy-native-dev-mode:latest")
                 .withNetworkMode("host")
-                .withExposedPorts(9000)
+                .withExposedPorts(PROXY_PORT)
                 .withEnv("USER_FUNCTION_PORT", FUNCTION_PORT)
                 .withLogConsumer(new Slf4jLogConsumer(log))
                 .waitingFor(
                     Wait.forLogMessage(".*CloudState proxy online.*", 1)
             );
-
     }
 
     @Test
     public void gettingShoppingCartReturnOkStatus() throws Exception {
         // Start Proxy container first
         proxy.start();
-
+   
         // Execute some requests
         HttpRequest.POST(String.format("http://localhost:%s/cart/1/items/add", PROXY_PORT))
                 .withEntity(
