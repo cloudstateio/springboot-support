@@ -1,3 +1,6 @@
+This document is for informational purposes only. Little or no conclusion will be drawn from here, 
+it is just interesting data that I want to share.
+Like all performance tests, local variables will always change the results.
 
 Gatling test code:
 
