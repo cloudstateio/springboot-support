@@ -165,7 +165,7 @@ Cloudsatate Proxy:
 
 ![proxy memory](/docs/img/proxy-memory.png)
 
-Click on the image below to see the video of the docker statistics:
+Click on the image below to see the video of the docker statistics. The first 30 seconds are from the resting environment:
 
 [![docker stats](/docs/img/docker-stats.png)](https://asciinema.org/a/H8IzG9tdEsgPqkZiXfrQ6UN3D)
 
