@@ -8,6 +8,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class RegistrarService {
@@ -32,10 +34,11 @@ public class RegistrarService {
     }
 
     public CloudState registerAllEntities() throws Exception {
-        return CloudstateUtils.register(cloudState, stateController, context, entityScan, properties);
+        return CloudstateUtils.register(Optional.empty(), cloudState, stateController, context, entityScan, properties);
     }
 
     public CloudState register(Object entityInstance) throws Exception {
-        return CloudstateUtils.register(entityInstance, cloudState, stateController, context, entityScan, properties);
+        Objects.requireNonNull(entityInstance);
+        return CloudstateUtils.register(Optional.of(entityInstance), cloudState, stateController, context, entityScan, properties);
     }
 }

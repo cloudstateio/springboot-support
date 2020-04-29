@@ -16,18 +16,21 @@ final class BaseEntitySupportFactory implements EntitySupportFactory {
 
     private final Entity entity;
     private final ApplicationContext context;
-    private final ThreadLocal<Map<Class<?>, Map<String, Object>>> stateController;
+    private final ThreadLocal<Map<Class<?>, Map<String, Object>>> injectController;
 
-    public BaseEntitySupportFactory(Entity entity, ApplicationContext context, ThreadLocal<Map<Class<?>, Map<String, Object>>> stateController) {
+    public BaseEntitySupportFactory(
+            Entity entity,
+            ApplicationContext context,
+            ThreadLocal<Map<Class<?>, Map<String, Object>>> injectController) {
         this.entity = entity;
         this.context = context;
-        this.stateController = stateController;
+        this.injectController = injectController;
     }
 
     @Override
-    public Object create(Context eventSourcedEntityCreationContext, String entityId) {
+    public Object create(Context creationContext, String entityId) {
         LOG.trace("Create instance of EventSourcedEntity");
-        postConstructObject(stateController, entity.getEntityClass(), eventSourcedEntityCreationContext, entityId);
+        postConstructObject(injectController, entity.getEntityClass(), creationContext, entityId);
         return context.getBean(entity.getEntityClass());
     }
 

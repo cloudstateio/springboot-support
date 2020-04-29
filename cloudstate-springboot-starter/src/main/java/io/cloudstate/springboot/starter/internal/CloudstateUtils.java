@@ -26,63 +26,9 @@ public final class CloudstateUtils {
     public static final String CLOUDSTATE_SPRINGBOOT_SUPPORT = "cloudstate-springboot-support";
 
     public static CloudState register(
+            Optional<Object> object,
             CloudState cloudState,
-            ThreadLocal<Map<Class<?>, Map<String, Object>>> stateController,
-            ApplicationContext applicationContext,
-            CloudstateEntityScan entityScan,
-            CloudstateProperties properties) throws Exception {
-
-        // Setting environments before create Cloudstate server
-        setServerOptions(properties);
-        final List<Entity> entities = entityScan.findEntities();
-
-        if (Objects.nonNull(entities) && !entities.isEmpty()){
-
-            entities.forEach(entity -> {
-                EntitySupportFactory entitySupportFactory = new BaseEntitySupportFactory(
-                        entity, applicationContext, stateController);
-
-                Class<?> entityClass = entitySupportFactory.typeClass();
-                final AnySupport anySupport = newAnySupport(entity.getAdditionalDescriptors());
-
-                if (Objects.nonNull(entity.getDescriptor())) {
-                    switch (entity.getEntityType()) {
-                        case EventSourced:
-                            cloudState.registerEventSourcedEntity(
-                                    new AnnotationBasedEventSourcedExtensionSupport(
-                                            entitySupportFactory, anySupport, entity.getDescriptor()),
-                                    entity.getDescriptor(),
-                                    getPersistenceId(entityClass),
-                                    getSnapshotEvery(entityClass),
-                                    entity.getAdditionalDescriptors()
-                            );
-
-                            break;
-                        case CRDT:
-                            cloudState.registerCrdtEntity(
-                                    new AnnotationBasedCrdtExtensionSupport(
-                                            entitySupportFactory, anySupport, entity.getDescriptor()),
-                                    entity.getDescriptor(),
-                                    entity.getAdditionalDescriptors());
-
-                            break;
-                        default:
-                            throw new IllegalArgumentException(
-                                    String.format("Unknown entity type %s", entity.getEntityType()));
-                    }
-                } else {
-                    LOG.warn("Entity '{}' was found but no valid ServiceDescriptor was declared",
-                            entity.getEntityClass().getName());
-                }
-            });
-        }
-        return cloudState;
-    }
-
-    public static CloudState register(
-            Object object,
-            CloudState cloudState,
-            ThreadLocal<Map<Class<?>, Map<String, Object>>> stateController,
+            ThreadLocal<Map<Class<?>, Map<String, Object>>> injectProperties,
             ApplicationContext applicationContext,
             CloudstateEntityScan entityScan,
             CloudstateProperties properties) throws Exception {
@@ -91,14 +37,14 @@ public final class CloudstateUtils {
         setServerOptions(properties);
         final List<Entity> entities = entityScan.findEntities()
                 .stream()
-                .filter(e -> e.getEntityClass() == object.getClass())
+                .filter(e -> isEntity(object, e))
                 .collect(Collectors.toList());
 
         if (Objects.nonNull(entities) && !entities.isEmpty()){
 
             entities.forEach(entity -> {
                 EntitySupportFactory entitySupportFactory = new BaseEntitySupportFactory(
-                        entity, applicationContext, stateController);
+                        entity, applicationContext, injectProperties);
 
                 Class<?> entityClass = entitySupportFactory.typeClass();
                 final AnySupport anySupport = newAnySupport(entity.getAdditionalDescriptors());
@@ -137,46 +83,54 @@ public final class CloudstateUtils {
         return cloudState;
     }
 
+    private static boolean isEntity(Optional<Object> optionalInstance, Entity e) {
+        if (optionalInstance.isEmpty()) {
+            return true;
+        } else {
+            return e.getEntityClass() == optionalInstance.get().getClass();
+        }
+    }
+
     public static void postConstructObject(
-            ThreadLocal<Map<Class<?>, Map<String, Object>>> stateController,
+            ThreadLocal<Map<Class<?>, Map<String, Object>>> injectProperties,
             Class<?> entityClass,
-            Context eventSourcedEntityCreationContext,
+            Context creationContext,
             String entityId){
 
         Map<String, Object> state = new HashMap<>();
         final Field[] fields = entityClass.getDeclaredFields();
         for (Field field: fields){
             LOG.trace("Field: {}", field);
-            setEntityId(stateController, state, entityClass,entityId, field);
-            setCloudstateContext(stateController, state, entityClass, eventSourcedEntityCreationContext, field);
+            setEntityId(injectProperties, state, entityClass,entityId, field);
+            setCloudstateContext(injectProperties, state, entityClass, creationContext, field);
         }
 
     }
 
-    public static void setEntityId(ThreadLocal<Map<Class<?>, Map<String, Object>>> stateController,
+    public static void setEntityId(ThreadLocal<Map<Class<?>, Map<String, Object>>> injectProperties,
                                    Map<String, Object> state, Class<?> entityClass,
                                    String entityId, Field field) {
         if (field.isAnnotationPresent(EntityId.class)) {
             if (field.getType().equals(String.class)) {
                 LOG.debug("Set the EntityId: {}", entityId);
                 state.put(field.getName(), entityId);
-                stateController.get().put(entityClass, state);
+                injectProperties.get().put(entityClass, state);
             } else {
                 LOG.warn("Type of Field annotated with @EntityId must be String.class");
             }
         }
     }
 
-    public static void setCloudstateContext(ThreadLocal<Map<Class<?>, Map<String, Object>>> stateController,
+    public static void setCloudstateContext(ThreadLocal<Map<Class<?>, Map<String, Object>>> injectProperties,
                                             Map<String, Object> state, Class<?> entityClass,
-                                            Context eventSourcedEntityCreationContext,
+                                            Context creationContext,
                                             Field field) {
-        if (field.isAnnotationPresent(CloudstateContext.class) && Objects.nonNull(eventSourcedEntityCreationContext)) {
+        if (field.isAnnotationPresent(CloudstateContext.class) && Objects.nonNull(creationContext)) {
             field.setAccessible(true);
-            LOG.debug("Set the EventSourcedEntityCreationContext: {}",
-                    eventSourcedEntityCreationContext.getClass().getSimpleName());
-            state.put(field.getName(), eventSourcedEntityCreationContext);
-            stateController.get().put(entityClass, state);
+            LOG.debug("Set the Creation Context: {}",
+                    creationContext.getClass().getSimpleName());
+            state.put(field.getName(), creationContext);
+            injectProperties.get().put(entityClass, state);
         }
     }
 
