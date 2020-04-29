@@ -163,7 +163,7 @@
                 </executions>
                 <configuration>
                     <to>
-                        <image>sleipnir/cloudstate-boot-jsr330</image>
+                        <image>sleipnir/springboot-jsr330-shoppincart</image>
                         <credHelper></credHelper>
                         <tags>
                             <tag>${project.version}</tag>

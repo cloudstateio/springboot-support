@@ -204,7 +204,7 @@
                         <credHelper></credHelper>
                     </from>
                     <to>
-                        <image>sleipnir/cloudstate-boot-example</image>
+                        <image>sleipnir/springboot-shoppingcart</image>
                         <credHelper></credHelper>
                         <tags>
                             <tag>${project.version}</tag>
