@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ShoppingcartConfiguration {
+public class DescriptorsConfiguration {
 
     @Bean("ShoppingCartServiceDescriptor")
     public Descriptors.ServiceDescriptor getDescriptor() {
