@@ -83,14 +83,6 @@ public final class CloudstateUtils {
         return cloudState;
     }
 
-    private static boolean isEntity(Optional<Object> optionalInstance, Entity e) {
-        if (optionalInstance.isEmpty()) {
-            return true;
-        } else {
-            return e.getEntityClass() == optionalInstance.get().getClass();
-        }
-    }
-
     public static void postConstructObject(
             ThreadLocal<Map<Class<?>, Map<String, Object>>> injectProperties,
             Class<?> entityClass,
@@ -131,6 +123,14 @@ public final class CloudstateUtils {
                     creationContext.getClass().getSimpleName());
             state.put(field.getName(), creationContext);
             injectProperties.get().put(entityClass, state);
+        }
+    }
+
+    private static boolean isEntity(Optional<Object> optionalInstance, Entity e) {
+        if (optionalInstance.isEmpty()) {
+            return true;
+        } else {
+            return e.getEntityClass() == optionalInstance.get().getClass();
         }
     }
 

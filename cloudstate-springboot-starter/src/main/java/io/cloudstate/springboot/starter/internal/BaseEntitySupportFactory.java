@@ -29,7 +29,7 @@ final class BaseEntitySupportFactory implements EntitySupportFactory {
 
     @Override
     public Object create(Context creationContext, String entityId) {
-        LOG.trace("Create instance of EventSourcedEntity");
+        LOG.trace("Create instance of Entity");
         postConstructObject(injectProperties, entity.getEntityClass(), creationContext, entityId);
         return context.getBean(entity.getEntityClass());
     }
