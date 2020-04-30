@@ -162,8 +162,12 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <from>
+                        <image>adoptopenjdk/openjdk8-openj9:alpine-slim</image>
+                        <credHelper></credHelper>
+                    </from>
                     <to>
-                        <image>sleipnir/cloudstate-boot-jsr330</image>
+                        <image>sleipnir/springboot-shoppingcart-jsr330</image>
                         <credHelper></credHelper>
                         <tags>
                             <tag>${project.version}</tag>
@@ -172,6 +176,8 @@
                     <container>
                         <mainClass>${main.class}</mainClass>
                         <jvmFlags>
+                            <jvmFlag>-XshareClasses</jvmFlag>
+                            <jvmFlag>-Xquickstart</jvmFlag>
                             <jvmFlag>-XX:+UseG1GC</jvmFlag>
                             <jvmFlag>-XX:+UseStringDeduplication</jvmFlag>
                         </jvmFlags>

@@ -167,7 +167,7 @@
                         <credHelper></credHelper>
                     </from>
                     <to>
-                        <image>sleipnir/cloudstate-boot-example</image>
+                        <image>sleipnir/springboot-shoppingcart</image>
                         <credHelper></credHelper>
                         <tags>
                             <tag>${project.version}</tag>
@@ -185,6 +185,13 @@
                             <port>8080</port>
                         </ports>
                     </container>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
         </plugins>
