@@ -6,7 +6,7 @@
 
     <groupId>io.cloudstate</groupId>
     <artifactId>examples</artifactId>
-    <version>0.4.3</version>
+    <version>0.5.0</version>
     <packaging>pom</packaging>
     
     <modules>
