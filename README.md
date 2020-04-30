@@ -7,6 +7,7 @@
 3. [Context Injection](#context-injection)
 4. [Conventions and Restrictions](#conventions-and-restrictions)
 5. [Running via Cloudstate CLI](#running-via-cloudstate-cli)
+6. [Build from Source](#build-from-source)
 
 ## Getting Started
 ***Note: This getting started is based on the official Cloudstate example from shopping-cart. For more information consult the [official documentation](https://cloudstate.io/docs/).***
@@ -597,5 +598,15 @@ It is clear that for this to happen it is necessary that the [PR](https://github
 with the proposal of the mechanism that allows 
 this implementation to work is accepted by the Cloudstate team.
 
+## Build from Source
+
+```shell script
+git clone https://github.com/sleipnir/spring-boot-cloudstate-starter.git && \
+  cd spring-boot-cloudstate-starter && \
+  chmod +x build.sh && ./build.sh
+```
+
+
 
 ***Have fun :)***
+
