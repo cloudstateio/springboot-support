@@ -3,12 +3,12 @@ package io.cloudstate.springboot.starter.internal;
 import com.google.protobuf.Descriptors;
 import io.cloudstate.javasupport.CloudState;
 import io.cloudstate.javasupport.Context;
+import io.cloudstate.javasupport.EntityFactory;
 import io.cloudstate.javasupport.EntityId;
-import io.cloudstate.javasupport.EntitySupportFactory;
 import io.cloudstate.javasupport.eventsourced.EventSourcedEntity;
 import io.cloudstate.javasupport.impl.AnySupport;
-import io.cloudstate.javasupport.impl.crdt.AnnotationBasedCrdtExtensionSupport;
-import io.cloudstate.javasupport.impl.eventsourced.AnnotationBasedEventSourcedExtensionSupport;
+import io.cloudstate.javasupport.impl.crdt.AnnotationBasedCrdtSupport;
+import io.cloudstate.javasupport.impl.eventsourced.AnnotationBasedEventSourcedSupport;
 import io.cloudstate.springboot.starter.CloudstateContext;
 import io.cloudstate.springboot.starter.autoconfigure.CloudstateProperties;
 import io.cloudstate.springboot.starter.internal.scan.CloudstateEntityScan;
@@ -32,15 +32,15 @@ public final class CloudstateUtils {
         if (Objects.nonNull(entities) && !entities.isEmpty()){
 
             entities.forEach(entity -> {
-                EntitySupportFactory entitySupportFactory = new BaseEntitySupportFactory(entity, applicationContext);
-                Class<?> entityClass = entitySupportFactory.typeClass();
+                EntityFactory entitySupportFactory = new BaseEntitySupportFactory(entity, applicationContext);
+                Class<?> entityClass = entitySupportFactory.entityClass();
                 final AnySupport anySupport = newAnySupport(entity.getAdditionalDescriptors());
 
                 if (Objects.nonNull(entity.getDescriptor())) {
                     switch (entity.getEntityType()) {
                         case EventSourced:
                             cloudState.registerEventSourcedEntity(
-                                    new AnnotationBasedEventSourcedExtensionSupport(entitySupportFactory, anySupport, entity.getDescriptor()),
+                                    new AnnotationBasedEventSourcedSupport(entitySupportFactory, anySupport, entity.getDescriptor()),
                                     entity.getDescriptor(),
                                     getPersistenceId(entityClass),
                                     getSnapshotEvery(entityClass),
@@ -50,7 +50,7 @@ public final class CloudstateUtils {
                             break;
                         case CRDT:
                             cloudState.registerCrdtEntity(
-                                    new AnnotationBasedCrdtExtensionSupport(entitySupportFactory, anySupport, entity.getDescriptor()),
+                                    new AnnotationBasedCrdtSupport(entitySupportFactory, anySupport, entity.getDescriptor()),
                                     entity.getDescriptor(),
                                     entity.getAdditionalDescriptors());
 
