@@ -10,7 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import io.cloudstate.javasupport.CloudState;
-import io.cloudstate.springboot.starter.internal.scan.CloudstateEntityScan;
+import io.cloudstate.springboot.starter.internal.CloudstateEntityScan;
 
 @Configuration
 @ConditionalOnClass(CloudstateProperties.class)

@@ -1,4 +1,4 @@
-package io.cloudstate.springboot.starter.internal.scan;
+package io.cloudstate.springboot.starter.internal;
 
 import com.google.protobuf.Descriptors;
 import io.cloudstate.javasupport.crdt.CrdtEntity;

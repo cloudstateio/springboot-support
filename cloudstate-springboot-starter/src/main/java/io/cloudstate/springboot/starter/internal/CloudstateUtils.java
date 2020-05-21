@@ -11,8 +11,6 @@ import io.cloudstate.javasupport.impl.crdt.AnnotationBasedCrdtSupport;
 import io.cloudstate.javasupport.impl.eventsourced.AnnotationBasedEventSourcedSupport;
 import io.cloudstate.springboot.starter.CloudstateContext;
 import io.cloudstate.springboot.starter.autoconfigure.CloudstateProperties;
-import io.cloudstate.springboot.starter.internal.scan.CloudstateEntityScan;
-import io.cloudstate.springboot.starter.internal.scan.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;

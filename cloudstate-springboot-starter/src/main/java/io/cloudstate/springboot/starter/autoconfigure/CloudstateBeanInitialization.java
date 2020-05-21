@@ -2,7 +2,7 @@ package io.cloudstate.springboot.starter.autoconfigure;
 
 import akka.Done;
 import io.cloudstate.javasupport.CloudState;
-import io.cloudstate.springboot.starter.internal.scan.CloudstateEntityScan;
+import io.cloudstate.springboot.starter.internal.CloudstateEntityScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
