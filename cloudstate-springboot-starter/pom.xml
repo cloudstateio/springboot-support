@@ -10,11 +10,11 @@
     <parent>
         <groupId>io.cloudstate</groupId>
         <artifactId>spring-boot-cloudstate-starter</artifactId>
-        <version>0.4.3</version>
+        <version>0.5.0</version>
     </parent>
 
     <properties>
-        <cloudstate.version>0.5.1</cloudstate.version> <!--0.5.0-110-b0e0534b / 0.4.3 / 0.5.0-106-b711267a-dev-->
+        <cloudstate.version>0.5.0-128-91d8973b</cloudstate.version> <!--0.5.1 / 0.5.0-110-b0e0534b / 0.4.3 / 0.5.0-106-b711267a-dev-->
         <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
