@@ -42,9 +42,9 @@ public class CloudstateBeanInitialization {
                     log.error("Failure on Cloudstate Server startup", ex);
                     return Done.done();
                 }).thenAccept(done -> {
-            Duration timeElapsed = Duration.between(start, Instant.now());
-            log.debug("Cloudstate Server keep alived for {}", timeElapsed);
-        });
+                    Duration timeElapsed = Duration.between(start, Instant.now());
+                    log.debug("Cloudstate Server keep alived for {}", timeElapsed);
+                });
     }
 
 }

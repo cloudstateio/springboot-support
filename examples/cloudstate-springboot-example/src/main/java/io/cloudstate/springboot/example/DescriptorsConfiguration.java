@@ -10,9 +10,9 @@ package io.cloudstate.springboot.example;
  * If your entity class is called ShoppinCartEntity then you can declare the beans as below:
  *
  * @Bean(name = "shoppingCartEntityServiceDescriptor")
- *  public Descriptors.ServiceDescriptor serviceDescriptor() {
- *      return Shoppingcart.getDescriptor().findServiceByName("ShoppingCart");
- *  }
+*  public Descriptors.ServiceDescriptor serviceDescriptor() {
+*      return Shoppingcart.getDescriptor().findServiceByName("ShoppingCart");
+*  }
  *
  * @Bean(name = "shoppingCartEntityFileDescriptors")
  * public Descriptors.FileDescriptor[] fileDescriptors() {
@@ -51,4 +51,3 @@ public class DescriptorsConfiguration {
         return new Descriptors.FileDescriptor[]{com.example.shoppingcart.persistence.Domain.getDescriptor()};
     }
 }
-

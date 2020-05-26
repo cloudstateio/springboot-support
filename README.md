@@ -4,19 +4,10 @@
 
 1. [Getting Started](#getting-started)
 2. [Configuration](#configuration)
-<<<<<<< HEAD
-3. [Advanced Configuration](#advanced-configuration)
-4. [Context Injection](#context-injection)
-5. [Conventions and Restrictions](#conventions-and-restrictions)
-6. [Forwarding and effects](#forwarding-and-effects)
-7. [Testing](#testing)
-8. [Running via Cloudstate CLI](#running-via-cloudstate-cli)
-=======
 3. [Context Injection](#context-injection)
 4. [Conventions and Restrictions](#conventions-and-restrictions)
 5. [Running via Cloudstate CLI](#running-via-cloudstate-cli)
 6. [Build from Source](#build-from-source)
->>>>>>> wip-di-support
 
 ## Getting Started
 ***Note: This getting started is based on the official Cloudstate example from shopping-cart. For more information consult the [official documentation](https://cloudstate.io/docs/).***
@@ -315,7 +306,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ShoppingcartConfiguration {
+public class DescriptorsConfiguration {
 
     @Bean
     public Descriptors.ServiceDescriptor shoppingCartEntityServiceDescriptor() {
@@ -340,6 +331,7 @@ import io.cloudstate.springboot.starter.autoconfigure.EnableCloudstate;
 @EnableCloudstate
 @SpringBootApplication
 public class Main {
+
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
     }
@@ -374,18 +366,6 @@ Or via docker after build:
 
 ```shell script
 [sleipnir@sleipnir spring-boot-cloudstate-starter]# docker run --rm --name shoppingcart-spring --net=host sleipnir/cloudstate-boot-example:0.4.3
-Unable to find image 'sleipnir/cloudstate-boot-example:0.4.3' locally
-0.4.3: Pulling from sleipnir/cloudstate-boot-example
-aad63a933944: Already exists 
-7e9e08010be5: Pull complete 
-125def8f4f2c: Pull complete 
-c2fe10915d96: Pull complete 
-70b87afe104e: Pull complete 
-2f2e42ac6971: Pull complete 
-12be80d74a84: Pull complete 
-46aa73b3d13b: Pull complete 
-Digest: sha256:ed66f472ab0875f0ec25ac5f953fb9e9197cb5e5a9211826630a4853e1cde64d
-Status: Downloaded newer image for sleipnir/cloudstate-boot-example:0.4.3
 SLF4J: Class path contains multiple SLF4J bindings.
 SLF4J: Found binding in [jar:file:/app/libs/logback-classic-1.2.3.jar!/org/slf4j/impl/StaticLoggerBinder.class]
 SLF4J: Found binding in [jar:file:/app/libs/slf4j-simple-1.7.26.jar!/org/slf4j/impl/StaticLoggerBinder.class]
@@ -402,15 +382,10 @@ SLF4J: Actual binding is of type [ch.qos.logback.classic.util.ContextSelectorSta
 
 
 Cloudtate v0.4.3
-2020-04-07 16:05:48.371  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : Starting Main on b5ba1455c3c9 with PID 1 (/app/classes started by root in /)
-2020-04-07 16:05:48.373  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : No active profile set, falling back to default profiles: default
-2020-04-07 16:05:48.705  INFO 1 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'io.cloudstate-io.cloudstate.springboot.starter.autoconfigure.CloudstateProperties' of type [io.cloudstate.springboot.starter.autoconfigure.CloudstateProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-04-07 16:05:48.706  INFO 1 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'io.cloudstate.springboot.starter.autoconfigure.CloudstateAutoConfiguration' of type [io.cloudstate.springboot.starter.autoconfigure.CloudstateAutoConfiguration$$EnhancerBySpringCGLIB$$212a4b21] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-04-07 16:05:48.720  INFO 1 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'cloudstateEntityScan' of type [io.cloudstate.springboot.starter.internal.scan.CloudstateEntityScan] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-04-07 16:05:48.722  INFO 1 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'stateController' of type [java.lang.ThreadLocal$SuppliedThreadLocal] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-04-07 16:05:48.935  INFO 1 --- [  cloudstate-t1] i.c.s.s.i.CloudstateBeanInitialization   : Starting Cloudstate Server...
-2020-04-07 16:05:48.943  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : Started Main in 0.89 seconds (JVM running for 1.193)
-
+2020-04-03 20:23:14.341  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : Starting Main on sleipnir with PID 1 (/app/classes started by root in /)
+2020-04-03 20:23:14.343  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : No active profile set, falling back to default profiles: default
+2020-04-03 20:23:15.060  INFO 1 --- [           main] i.c.s.s.a.CloudstateBeanInitialization   : Starting Cloudstate Server...
+2020-04-03 20:23:15.812  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : Started Main in 1.791 seconds (JVM running for 2.062)
 
 ```
 
@@ -455,6 +430,7 @@ cloudstate {
   user-function-port = 8080
   user-function-port = ${?PORT}
 
+
   system {
     akka {
       loglevel = "DEBUG"
@@ -466,88 +442,7 @@ cloudstate {
 }
 ```
 
-## Advanced Configuration
 
-Certain characteristics of the application startup can be regulated using two other configuration parameters:
-
-* **AutoRegister**: Default ***true***. It establishes that the entities must be registered automatically by the Spring container during its initialization.
-* **AutoStartup**: Default ***true***. Establishes that the Cloudstate server should be started automatically.
-
-Spring application.yml:
-
-```yaml
-io:
-  cloudstate:
-    auto-register: true
-    auto-startup: true
-```
-
-In case these two parameters are set to false then you must register and boot the application manually. Here is an example:
-
-```java
-@Component
-public class ManualStartupProcess {
-    
-    @Autowired
-    private ShoppingCartEntity entity;
-    
-    @Autowired
-    private RegistrarService registrarService;
-    
-    @PostConstruct
-    public void boot() throws Exception {
-        //Register entity
-        Cloudstate cloudstate = registrarService.register(entity);
-    
-        // Start the service
-        cloudstate.start()
-            .toCompletableFuture()
-            .exceptionally(ex -> {
-                log.error("Failure on Cloudstate Server startup", ex);
-                return Done.done();
-            })
-            .thenAccept(done -> {
-                log.info("Cloudstate Server start successfully");
-            });
-    }
-
-} 
-```
-
-In the example above we are using an auxiliary service class called RegistrarService to register an entity managed by Spring. 
-However, you may want to register an entity class without any special annotations and that is not managed by Spring. 
-In this case you will have to register your entity in the same way as if you were using the Cloudstate Java Support library directly:
-
-```java
-@Component
-public class ManualStartupProcess {
-    
-    @Autowired
-    private Cloudstate cloudstate;
-    
-    @PostConstruct
-    public void boot() throws Exception {
-    
-        // Register and start the service
-        cloudstate.registerEventSourcedEntity(
-                ShoppingCartEntity.class,
-                Shoppingcart.getDescriptor().findServiceByName("ShoppingCart"))
-            .start()
-            .toCompletableFuture()
-            .exceptionally(ex -> {
-                log.error("Failure on Cloudstate Server startup", ex);
-                return Done.done();
-            })
-            .thenAccept(done -> {
-                log.info("Cloudstate Server start successfully");
-            });
-    }
-
-} 
-```
-
-But, although available, **we discourage the use of these APIs for direct use**, as this library takes care of all these steps 
-automatically for you without any effort on your part.
 
 ## Context Injection
 
@@ -560,8 +455,8 @@ The Cloudstate Springboot Support library already includes the necessary depende
 ***At the moment we can only inject dependencies via class properties. 
 In Conventions and Restrictions we explain the reasons why.***
 
-You can annotate your entity classes with Spring ***@Component*** or ***@Service*** annotations but we have created a convenient 
-annotation that we call ***@CloudstateEntityBean*** that can be used for that too.
+You can annotate your entity classes with Spring @Component or @Service annotations but we have created a convenient 
+annotation that we call @CloudstateEntityBean that can be used for that too.
 
 ## Conventions and Restrictions
 
@@ -632,7 +527,7 @@ Getting Started example.
 
 ### JSR330
 
-The Cloudstate Springboot Support library supports JSR330 within the scope of the support provided by Spring itself to 
+The Cloudastate Springboot Support library supports JSR330 within the scope of the support provided by Spring itself to 
 this specification.
 Note that the Cloudstate Java Support library on which we depend allows you to bind Cloudstate and any other DI container 
 you want. However, no specific module for any of these other containers has yet been made.
@@ -695,195 +590,6 @@ public final class ShoppingCartEntity {
 ```
 ***As you can see, the constructor injection constraint applies only to EntityId and CreationContext. 
 So, as in the example above, you can mix the approaches and get the best of both worlds together***
-
-## Forwarding and effects
-
-This page documents how to use Cloudstate CRDT effects and forwarding in Java Springboot manner. For high level information on what 
-Cloudstate effects and forwarding is, please read the general 
-[Forwarding and effects](https://cloudstate.io/docs/user/features/effects.html) documentation first.
-Looking up service call references
-
-To forward a command or emit an effect, a reference to the service call that will be invoked needs to be looked up. 
-This can be done using the ServiceCallFactory interface, which is accessible on any context object 
-via the serviceCallFactory() method.
-
-For example, if a user function serves two entity types, a shopping cart, and a CRDT that tracks which items 
-are currently in hot demand, it might want to invoke the ItemAddedToCart command on example.shoppingcart.HotItems 
-as a side effect of the AddItem shopping cart command. This reference can be looked up like so:
-
-```java
-private static Logger log = LoggerFactory.getLogger(ShoppingCartEntity.class);
-
-private final ServiceCallRef<Hotitems.Item> itemAddedToCartRef;
-
-@EntityId
-private String entityId;
-
-@CloudstateContext
-private EventSourcedContext context;
-
-@PostConstruct
-public void setup() {
-    log.info(
-            "Setup ShoppingCartEntity with EntityId: {}. And EventSourcedContext: {}",
-            entityId, context);
-
-    itemAddedToCartRef =
-          ctx.serviceCallFactory()
-              .lookup(
-                  "io.cloudstate.springboot.example.ShoppingCartService", "ItemAddedToCart", Hotitems.Item.class);
-}
-
-```
-This could be looked up in the @PostConstruct annotated method of the entity, for later use, so it doesn’t have to be looked up each time it’s needed.
-
-## Testing
-
-Add test dependency:
-
-```xml
-<dependencies>
-    <dependency>
-        <groupId>io.cloudstate</groupId>
-        <artifactId>cloudstate-springboot-starter</artifactId>
-        <version>0.4.3</version>
-    </dependency>
-
-    <!-- Tests -->
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-test</artifactId>
-        <version>${spring-boot.version}</version>
-        <scope>test</scope>
-    </dependency>
-</dependencies>
-```
-
-Write the test case:
-
-```java
-package io.cloudstate.springboot.example;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import static junit.framework.TestCase.assertNotNull;
-
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = Main.class)
-public class ContextLoaderTest {
-
-    @Autowired
-    private RuleService service;
-
-    @Test
-    public void load(){
-        assertNotNull(service);
-    }
-}
-
-```
-
-Or one more complex test case:
-
-```java
-package io.cloudstate.springboot.example;
-
-import akka.actor.ActorSystem;
-import akka.http.javadsl.Http;
-import akka.http.javadsl.model.ContentTypes;
-import akka.http.javadsl.model.HttpEntities;
-import akka.http.javadsl.model.HttpRequest;
-import akka.http.javadsl.model.HttpResponse;
-import akka.stream.ActorMaterializer;
-import akka.stream.Materializer;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.testcontainers.containers.FixedHostPortGenericContainer;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.output.Slf4jLogConsumer;
-import org.testcontainers.containers.wait.strategy.Wait;
-
-import java.util.concurrent.CompletionStage;
-
-import static junit.framework.TestCase.assertTrue;
-import static org.assertj.core.api.Assertions.assertThat;
-
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = Main.class)
-public class ContextLoaderTest {
-    private static final Logger log = LoggerFactory.getLogger(ContextLoaderTest.class);
-    private static final int PROXY_PORT = 9000;
-    private static final String FUNCTION_PORT = "8080";
-
-    private GenericContainer proxy;
-
-    private ActorSystem system;
-    private Materializer materializer;
-
-    @Before
-    public void setup(){
-        system = ActorSystem.create();
-        materializer = ActorMaterializer.create(system);
-
-        proxy = new FixedHostPortGenericContainer("cloudstateio/cloudstate-proxy-native-dev-mode:latest")
-                .withNetworkMode("host")
-                .withExposedPorts(PROXY_PORT)
-                .withEnv("USER_FUNCTION_PORT", FUNCTION_PORT)
-                .withLogConsumer(new Slf4jLogConsumer(log))
-                .waitingFor(
-                    Wait.forLogMessage(".*CloudState proxy online.*", 1)
-            );
-    }
-
-    @Test
-    public void gettingShoppingCartReturnOkStatus() throws Exception {
-        // Start Proxy container first
-        proxy.start();
-   
-        // Execute some requests
-        HttpRequest.POST(String.format("http://localhost:%s/cart/1/items/add", PROXY_PORT))
-                .withEntity(
-                        HttpEntities.create(ContentTypes.APPLICATION_JSON,
-                                "{\"productId\": \"foo\", \"name\": \"A foo\", \"quantity\": 20}"));
-
-        final CompletionStage<HttpResponse> responseFuture =
-                Http.get(system)
-                        .singleRequest(HttpRequest.create(
-                                String.format("http://localhost:%s/carts/1/items", PROXY_PORT)), materializer);
-
-        final HttpResponse httpResponse = responseFuture.toCompletableFuture().get();
-
-        assertTrue(httpResponse.status().isSuccess());
-
-    }
-
-}
-
-```
-
-Note that to fully test your server you will need the Cloudstate proxy to be active and be able to access your local network interface. 
-That's why we use the [Test Container](https://www.testcontainers.org/) in the test shown above.
-If you want to use the same approach, you must add one more dependency to your project:
-
-```xml
-
-<dependency>
-    <groupId>org.testcontainers</groupId>
-    <artifactId>testcontainers</artifactId>
-    <version>1.12.5</version>
-    <scope>test</scope>
-</dependency>
-```
 
 ## Running via Cloudstate CLI
 
