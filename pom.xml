@@ -12,6 +12,7 @@
     <modules>
         <module>cloudstate-springboot-starter</module>
         <module>examples</module>
+        <module>benchmark</module>
     </modules>
 
 </project>
