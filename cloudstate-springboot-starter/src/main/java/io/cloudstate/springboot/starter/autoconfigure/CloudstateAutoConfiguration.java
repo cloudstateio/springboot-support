@@ -1,6 +1,5 @@
 package io.cloudstate.springboot.starter.autoconfigure;
 
-import io.cloudstate.springboot.starter.internal.CloudstateBeanPostProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -11,10 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import io.cloudstate.javasupport.CloudState;
-import io.cloudstate.springboot.starter.internal.scan.CloudstateEntityScan;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import io.cloudstate.springboot.starter.internal.CloudstateEntityScan;
 
 @Configuration
 @ConditionalOnClass(CloudstateProperties.class)
@@ -36,14 +32,8 @@ public class CloudstateAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public CloudState cloudState(CloudstateEntityScan entityScan) {
+    public CloudState cloudState(CloudstateEntityScan entityScan) throws Exception {
         return new CloudState();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public ThreadLocal<Map<Class<?>, Map<String, Object>>> stateController(){
-        return ThreadLocal.withInitial(ConcurrentHashMap::new);
     }
 
 }

@@ -1,9 +1,7 @@
-package io.cloudstate.springboot.starter;
+package io.cloudstate.springboot.starter.internal;
 
 import io.cloudstate.springboot.starter.autoconfigure.CloudstateAutoConfiguration;
 import io.cloudstate.springboot.starter.autoconfigure.CloudstateProperties;
-import io.cloudstate.springboot.starter.internal.scan.CloudstateEntityScan;
-import io.cloudstate.springboot.starter.internal.scan.Entity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

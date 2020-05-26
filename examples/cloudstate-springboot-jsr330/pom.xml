@@ -4,7 +4,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>cloudstate-springboot-jsr330</artifactId>
 
     <properties>
@@ -14,7 +13,7 @@
     <parent>
         <artifactId>examples</artifactId>
         <groupId>io.cloudstate</groupId>
-        <version>0.4.3</version>
+        <version>0.5.1</version>
     </parent>
 
     <dependencyManagement>
@@ -32,7 +31,7 @@
         <dependency>
             <groupId>io.cloudstate</groupId>
             <artifactId>cloudstate-springboot-starter</artifactId>
-            <version>0.4.3</version>
+            <version>0.5.1</version>
         </dependency>
     </dependencies>
 
@@ -162,8 +161,12 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <from>
+                        <image>adoptopenjdk/openjdk8-openj9:alpine-slim</image>
+                        <credHelper></credHelper>
+                    </from>
                     <to>
-                        <image>sleipnir/springboot-jsr330-shoppincart</image>
+                        <image>sleipnir/springboot-shoppingcart-jsr330</image>
                         <credHelper></credHelper>
                         <tags>
                             <tag>${project.version}</tag>
@@ -172,6 +175,8 @@
                     <container>
                         <mainClass>${main.class}</mainClass>
                         <jvmFlags>
+                            <jvmFlag>-XshareClasses</jvmFlag>
+                            <jvmFlag>-Xquickstart</jvmFlag>
                             <jvmFlag>-XX:+UseG1GC</jvmFlag>
                             <jvmFlag>-XX:+UseStringDeduplication</jvmFlag>
                         </jvmFlags>

@@ -4,12 +4,19 @@
 
 1. [Getting Started](#getting-started)
 2. [Configuration](#configuration)
+<<<<<<< HEAD
 3. [Advanced Configuration](#advanced-configuration)
 4. [Context Injection](#context-injection)
 5. [Conventions and Restrictions](#conventions-and-restrictions)
 6. [Forwarding and effects](#forwarding-and-effects)
 7. [Testing](#testing)
 8. [Running via Cloudstate CLI](#running-via-cloudstate-cli)
+=======
+3. [Context Injection](#context-injection)
+4. [Conventions and Restrictions](#conventions-and-restrictions)
+5. [Running via Cloudstate CLI](#running-via-cloudstate-cli)
+6. [Build from Source](#build-from-source)
+>>>>>>> wip-di-support
 
 ## Getting Started
 ***Note: This getting started is based on the official Cloudstate example from shopping-cart. For more information consult the [official documentation](https://cloudstate.io/docs/).***
@@ -328,7 +335,7 @@ Uses the **@EnableCloudstate** annotation to tell Spring what to do:
 ```java
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import io.cloudstate.springboot.starter.EnableCloudstate;
+import io.cloudstate.springboot.starter.autoconfigure.EnableCloudstate;
 
 @EnableCloudstate
 @SpringBootApplication
@@ -885,5 +892,15 @@ It is clear that for this to happen it is necessary that the [PR](https://github
 with the proposal of the mechanism that allows 
 this implementation to work is accepted by the Cloudstate team.
 
+## Build from Source
+
+```shell script
+git clone https://github.com/sleipnir/spring-boot-cloudstate-starter.git && \
+  cd spring-boot-cloudstate-starter && \
+  chmod +x build.sh && ./build.sh
+```
+
+
 
 ***Have fun :)***
+

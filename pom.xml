@@ -6,6 +6,7 @@
 
     <groupId>io.cloudstate</groupId>
     <artifactId>spring-boot-cloudstate-starter</artifactId>
+<<<<<<< HEAD
     <version>0.4.3</version>
     <build>
         <plugins>
@@ -19,6 +20,9 @@
             </plugin>
         </plugins>
     </build>
+=======
+    <version>0.5.1</version>
+>>>>>>> wip-di-support
     <packaging>pom</packaging>
 
     <modules>

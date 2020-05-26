@@ -1,6 +1,6 @@
 package io.cloudstate.springboot.example;
 
-import io.cloudstate.springboot.starter.EnableCloudstate;
+import io.cloudstate.springboot.starter.autoconfigure.EnableCloudstate;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

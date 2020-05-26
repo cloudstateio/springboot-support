@@ -15,7 +15,7 @@
     <parent>
         <artifactId>examples</artifactId>
         <groupId>io.cloudstate</groupId>
-        <version>0.4.3</version>
+        <version>0.5.1</version>
     </parent>
 
     <dependencyManagement>
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>io.cloudstate</groupId>
             <artifactId>cloudstate-springboot-starter</artifactId>
-            <version>0.4.3</version>
+            <version>0.5.1</version>
         </dependency>
 
         <!-- Tests -->
@@ -247,6 +247,12 @@
                 <version>3.0.1</version>
             </plugin>
 
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
