@@ -7,7 +7,7 @@ import io.gatling.core.structure.{ChainBuilder, ScenarioBuilder}
 import io.gatling.http.Predef._
 import io.gatling.http.protocol.HttpProtocolBuilder
 
-class LoadTest extends Simulation {
+class Load extends Simulation {
 
   val httpProtocol: HttpProtocolBuilder = http
     .baseUrl("http://localhost:9000")

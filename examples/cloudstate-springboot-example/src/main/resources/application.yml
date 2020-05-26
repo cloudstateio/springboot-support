@@ -11,5 +11,5 @@ spring:
 io:
   cloudstate:
     user-function-port: 8080
-    user-function-interface: "0.0.0.0"
+    user-function-interface: "127.0.0.1"
     user-function-package-name: "io.cloudstate.springboot.example"

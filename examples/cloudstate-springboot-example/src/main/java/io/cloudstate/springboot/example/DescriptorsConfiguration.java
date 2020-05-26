@@ -39,7 +39,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ShoppingcartConfiguration {
+public class DescriptorsConfiguration {
 
     @Bean
     public Descriptors.ServiceDescriptor shoppingCartEntityServiceDescriptor() {
@@ -51,3 +51,4 @@ public class ShoppingcartConfiguration {
         return new Descriptors.FileDescriptor[]{com.example.shoppingcart.persistence.Domain.getDescriptor()};
     }
 }
+

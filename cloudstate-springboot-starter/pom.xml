@@ -70,14 +70,9 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.5.1</version>
                 <configuration>
-<<<<<<< HEAD
-                    <source>11</source>
-                    <target>11</target>
-=======
                     <source>1.8</source>
                     <target>1.8</target>
                     <generatedTestSourcesDirectory>${project.build.directory}/generated-sources/akka-grpc-java</generatedTestSourcesDirectory>
->>>>>>> wip-di-support
                 </configuration>
                 <executions>
                     <!-- Replacing default-compile as it is treated specially by maven -->
