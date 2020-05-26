@@ -137,41 +137,41 @@ Then what we have to do is start our compiled user role. And run our test with *
 
 Cloudstate Springboot startup:
 
-![cloudstate boot](/docs/img/cloudstate-boot-perf-boot-wow.png)
+![cloudstate boot](docs/img/cloudstate-boot-perf-boot-wow.png)
 
 Cloudstate CLI starting Proxy:
 
-![cloudstate proxy run](/docs/img/cloudstate-cli-boot-perf.png)
+![cloudstate proxy run](docs/img/cloudstate-cli-boot-perf.png)
 
 Tests results:
 
-![cloudstate gatling](/docs/img/cloudstate-gatling.png)
+![cloudstate gatling](docs/img/cloudstate-gatling.png)
 
-![gatling 1](/docs/img/gatling-perf-1.png)
+![gatling 1](docs/img/gatling-perf-1.png)
 
-![gatling 2](/docs/img/gatling-perf-2.png)
+![gatling 2](docs/img/gatling-perf-2.png)
 
-![gatling 3](/docs/img/gatling-perf-3.png)
+![gatling 3](docs/img/gatling-perf-3.png)
 
-![gatling 4](/docs/img/gatling-perf-4.png)
+![gatling 4](docs/img/gatling-perf-4.png)
 
 Cloudstate Springboot User function:
 
-![cloudstate perf](/docs/img/cloudstate-perf-user-paused.png)
+![cloudstate perf](docs/img/cloudstate-perf-user-paused.png)
 
-![cloudstate cpug](/docs/img/cloudstate-user-perf-ok.png)
+![cloudstate cpug](docs/img/cloudstate-user-perf-ok.png)
 
-![cloudstate memory](/docs/img/cloudstate-user-perf-memory.png)
+![cloudstate memory](docs/img/cloudstate-user-perf-memory.png)
 
 Cloudsatate Proxy:
 
-![proxy cpu](/docs/img/proxy-cpu.png)
+![proxy cpu](docs/img/proxy-cpu.png)
 
-![proxy memory](/docs/img/proxy-memory.png)
+![proxy memory](docs/img/proxy-memory.png)
 
 Click on the image below to see the video of the docker statistics. The first 30 seconds are from the resting environment:
 
-[![docker stats](/docs/img/docker-stats.png)](https://asciinema.org/a/H8IzG9tdEsgPqkZiXfrQ6UN3D)
+[![docker stats](docs/img/docker-stats.png)](https://asciinema.org/a/H8IzG9tdEsgPqkZiXfrQ6UN3D)
 
 Well the graphics and evidence speak for themselves, but in summary we can see that the use of cpu at rest for both 
 applications is very good, as well as the memory consumption is acceptable. However, this changes a little when we start 
