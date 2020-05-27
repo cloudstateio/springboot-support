@@ -4,7 +4,7 @@
                           http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>cloudstate-springboot-starter</artifactId>
+    <artifactId>springboot-support</artifactId>
     <packaging>jar</packaging>
 
     <parent>
@@ -63,7 +63,7 @@
     </dependencies>
 
     <build>
-        <finalName>cloudstate-springboot-starter</finalName>
+        <finalName>springboot-support</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

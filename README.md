@@ -18,8 +18,8 @@ First add the dependency of the cloudstater starter to your project. Here an Mav
 <dependencies>
     <dependency>
         <groupId>io.cloudstate</groupId>
-        <artifactId>cloudstate-springboot-starter</artifactId>
-        <version>0.4.3</version>
+        <artifactId>springboot-support</artifactId>
+        <version>0.5.1</version>
     </dependency>
 </dependencies>
 ```
@@ -66,20 +66,15 @@ Here we have an example of a pom.xml file with all the necessary parts present:
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+    
     <modelVersion>4.0.0</modelVersion>
-
+    <groupId>io.cloudstate</groupId>
     <artifactId>cloudstate-springboot-example</artifactId>
+    <version>0.5.1</version>
 
     <properties>
         <main.class>io.cloudstate.springboot.example.Main</main.class>
     </properties>
-
-    <parent>
-        <artifactId>examples</artifactId>
-        <groupId>io.cloudstate</groupId>
-        <version>0.4.3</version>
-    </parent>
 
     <dependencyManagement>
         <dependencies>
@@ -95,8 +90,8 @@ Here we have an example of a pom.xml file with all the necessary parts present:
     <dependencies>
         <dependency>
             <groupId>io.cloudstate</groupId>
-            <artifactId>cloudstate-springboot-starter</artifactId>
-            <version>0.4.3</version>
+            <artifactId>springboot-support</artifactId>
+            <version>0.5.1</version>
         </dependency>
     </dependencies>
 

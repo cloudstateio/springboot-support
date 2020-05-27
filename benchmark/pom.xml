@@ -30,7 +30,7 @@
     <dependencies>
         <dependency>
             <groupId>io.cloudstate</groupId>
-            <artifactId>cloudstate-springboot-starter</artifactId>
+            <artifactId>springboot-support</artifactId>
             <version>0.5.1</version>
         </dependency>
 
