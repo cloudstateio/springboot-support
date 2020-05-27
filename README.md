@@ -346,7 +346,7 @@ Run the application in the same way as you would any other springboot applicatio
  \______||_______| \______/   \______/  |_______/ |_______/       |__|    /__/     \__\  |__|     |_______|
 
 
-Cloudtate v0.4.3
+Cloudtate v0.5.1
 2020-04-03 14:42:52.090  INFO 14233 --- [           main] io.cloudstate.springboot.example.Main    : Starting Main on sleipnir with PID 14233 (/home/sleipnir/development/workspace/pessoal/cloudstate-repos/spring-boot-cloudstate-starter/examples/cloudstate-springboot-example/target/classes started by root in /home/sleipnir/development/workspace/pessoal/cloudstate-repos/spring-boot-cloudstate-starter)
 2020-04-03 14:42:52.095  INFO 14233 --- [           main] io.cloudstate.springboot.example.Main    : No active profile set, falling back to default profiles: default
 2020-04-03 14:42:53.120  INFO 14233 --- [           main] i.c.s.s.a.CloudstateBeanInitialization   : Starting Cloudstate Server...
@@ -373,7 +373,7 @@ SLF4J: Actual binding is of type [ch.qos.logback.classic.util.ContextSelectorSta
  \______||_______| \______/   \______/  |_______/ |_______/       |__|    /__/     \__\  |__|     |_______|
 
 
-Cloudtate v0.4.3
+Cloudtate v0.5.1
 2020-04-03 20:23:14.341  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : Starting Main on sleipnir with PID 1 (/app/classes started by root in /)
 2020-04-03 20:23:14.343  INFO 1 --- [           main] io.cloudstate.springboot.example.Main    : No active profile set, falling back to default profiles: default
 2020-04-03 20:23:15.060  INFO 1 --- [           main] i.c.s.s.a.CloudstateBeanInitialization   : Starting Cloudstate Server...
