@@ -592,8 +592,8 @@ this implementation to work is accepted by the Cloudstate team.
 ## Build from Source
 
 ```shell script
-git clone https://github.com/sleipnir/spring-boot-cloudstate-starter.git && \
-  cd spring-boot-cloudstate-starter && \
+git clone https://github.com/cloudstateio/springboot-support.git && \
+  cd springboot-support && \
   chmod +x build.sh && ./build.sh
 ```
 
