@@ -315,7 +315,7 @@ public class DescriptorsConfiguration {
 }
 ```
 
-Then write your main class in the Spring boot style. 
+Then write your simple main class in the Spring boot style. 
 Uses the **@EnableCloudstate** annotation to tell Spring what to do:
 
 ```java
@@ -326,10 +326,7 @@ import io.cloudstate.springboot.starter.autoconfigure.EnableCloudstate;
 @EnableCloudstate
 @SpringBootApplication
 public class Main {
-
-    public static void main(String[] args) {
-        SpringApplication.run(Main.class, args);
-    }
+    public static void main(String[] args) { SpringApplication.run(Main.class, args); }
 }
 
 ```
