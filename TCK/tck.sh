@@ -2,9 +2,9 @@
 
 set -x
 
-USER_FUNCTION_VERSION="0.5.0"
+USER_FUNCTION_VERSION="0.5.1"
 USER_FUNCTION_NAME="user-function"
-USER_FUNCTION_IMAGE="sleipnir/springboot-shoppingcart"
+USER_FUNCTION_IMAGE="cloudstateio/samples-springboot-shopping-cart"
 
 finally() {
   docker rm -f "cloudstate-proxy"
