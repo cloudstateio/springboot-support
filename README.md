@@ -170,7 +170,7 @@ Here we have an example of a pom.xml file with all the necessary parts present:
                 </executions>
                 <configuration>
                     <to>
-                        <image>sleipnir/cloudstate-boot-example</image>
+                        <image>cloudstateio/samples-springboot-shopping-cart</image>
                         <credHelper></credHelper>
                         <tags>
                             <tag>${project.version}</tag>
@@ -360,7 +360,7 @@ Cloudtate v0.4.3
 Or via docker after build:
 
 ```shell script
-[sleipnir@sleipnir spring-boot-cloudstate-starter]# docker run --rm --name shoppingcart-spring --net=host sleipnir/cloudstate-boot-example:0.4.3
+[sleipnir@sleipnir spring-boot-cloudstate-starter]# docker run --rm --name shoppingcart-spring --net=host cloudstateio/samples-springboot-shopping-cart:0.5.1
 SLF4J: Class path contains multiple SLF4J bindings.
 SLF4J: Found binding in [jar:file:/app/libs/logback-classic-1.2.3.jar!/org/slf4j/impl/StaticLoggerBinder.class]
 SLF4J: Found binding in [jar:file:/app/libs/slf4j-simple-1.7.26.jar!/org/slf4j/impl/StaticLoggerBinder.class]
@@ -546,17 +546,13 @@ private EventSourcedContext context;
 
 ### Using properties instead constructors
 
-Unfortunately in this present version of the library we do not support injection via constructors. 
-We know that this is not a good practice mainly for creating tests, but due to some characteristics 
-of the life cycle of objects managed by cloudstate java support, we are currently unable to provide support to constructors.
-This is not to say that it will always be so and we hope to resolve these 
-[issue](https://github.com/sleipnir/spring-boot-cloudstate-starter/issues/6) soon and enable the use of constructors 
-in the future.
+It is currently not possible to inject Cloudstate's EntityId and Context properties via constructor. 
+This is because the life cycles of these priorities differ from the life cycle of objects managed directly by Spring.
 
-Obviously this is only a problem if you want to inject EntityId or EventSourcedEntityCreationContext. 
-Otherwise, if you want to inject only other Beans from the Spring Context you can use injection via constructors as normal.
+This is obviously only an issue if you want to inject EntityId or EventSourcedEntityCreationContext.
+Otherwise, if you want to inject only other Spring Context Beans, you can use injection via builders as normal.
 
-The constructors below would be perfectly acceptable:
+The builders below would be perfectly acceptable:
 
 ```java
 @EventSourcedEntity
