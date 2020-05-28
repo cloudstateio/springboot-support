@@ -1,0 +1,5 @@
+jdk: openjdk8
+script:
+  - chmod +x build.sh
+  - ./build.sh
+
