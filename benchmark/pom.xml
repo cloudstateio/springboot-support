@@ -8,7 +8,7 @@
 
     <parent>
         <artifactId>examples</artifactId>
-        <groupId>io.cloudstate</groupId>
+        <groupId>spring-boot-cloudstate-starter</groupId>
         <version>0.5.1</version>
     </parent>
 
