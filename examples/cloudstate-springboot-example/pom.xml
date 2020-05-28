@@ -38,13 +38,13 @@
 
     <build>
 
-        <extensions>
-            <extension>
-                <groupId>kr.motd.maven</groupId>
-                <artifactId>os-maven-plugin</artifactId>
-                <version>1.6.0</version>
-            </extension>
-        </extensions>
+            <extensions>
+                <extension>
+                    <groupId>kr.motd.maven</groupId>
+                    <artifactId>os-maven-plugin</artifactId>
+                    <version>1.6.0</version>
+                </extension>
+            </extensions>
 
         <plugins>
             <plugin>
@@ -196,5 +196,26 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>bintray-akka-maven</id>
+            <name>bintray</name>
+            <url>https://dl.bintray.com/akka/maven</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>bintray-akka-maven</id>
+            <name>bintray-plugins</name>
+            <url>https://dl.bintray.com/akka/maven</url>
+        </pluginRepository>
+    </pluginRepositories>
 
 </project>
