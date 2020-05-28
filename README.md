@@ -1,4 +1,5 @@
 # Spring Boot Cloudstate Starter
+[![Build Status](https://travis-ci.com/cloudstateio/springboot-support.svg?branch=master)](https://travis-ci.com/cloudstateio/springboot-support)
 
 # Content
 
