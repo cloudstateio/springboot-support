@@ -5,15 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>cloudstate-springboot-example</artifactId>
 
-    <properties>
-        <main.class>io.cloudstate.springboot.example.Main</main.class>
-    </properties>
-
     <parent>
         <artifactId>examples</artifactId>
         <groupId>io.cloudstate</groupId>
         <version>0.5.1</version>
     </parent>
+
+    <properties>
+        <main.class>io.cloudstate.springboot.example.Main</main.class>
+    </properties>
 
     <dependencyManagement>
         <dependencies>
