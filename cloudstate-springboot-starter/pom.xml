@@ -139,17 +139,17 @@
                 </configuration>
             </plugin>
         </plugins>
-
-        <distributionManagement>
-            <snapshotRepository>
-                <id>io.cloudstate</id>
-                <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            </snapshotRepository>
-
-            <repository>
-                <id>io.cloudstate</id>
-                <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-            </repository>
-        </distributionManagement>
     </build>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>io.cloudstate</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+
+        <repository>
+            <id>io.cloudstate</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 </project>
