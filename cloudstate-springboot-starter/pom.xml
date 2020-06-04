@@ -12,6 +12,22 @@
         <version>0.5.1</version>
     </parent>
 
+    <url>https://github.com/cloudstateio/springboot-support</url>
+    <inceptionYear>2020</inceptionYear>
+    <licenses>
+        <license>
+            <name>Apache 2.0</name>
+            <url>https://opensource.org/licenses/Apache-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git@github.com/cloudstateio/springboot-support</connection>
+        <developerConnection>scm:git:git@github.com/cloudstateio/springboot-support.git</developerConnection>
+        <url>https://github.com/cloudstateio/springboot-support</url>
+    </scm>
+
     <properties>
         <cloudstate.version>0.5.1</cloudstate.version> 
         <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
