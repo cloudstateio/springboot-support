@@ -1,0 +1,11 @@
+<configuration xmlns="http://jgitver.github.io/maven/configuration/1.1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://jgitver.github.io/maven/configuration/1.1.0 https://jgitver.github.io/maven/configuration/jgitver-configuration-v1_1_0.xsd">
+    <!-- Configuration below provides snapshot versions like those used with other cloudstate projects (that use sbt-dynver plugin) -->
+    <strategy>CONFIGURABLE</strategy>
+    <useCommitDistance>true</useCommitDistance>
+    <useGitCommitId>true</useGitCommitId>
+    <gitCommitIdLength>8</gitCommitIdLength>
+    <failIfDirty>true</failIfDirty>
+    <nonQualifierBranches>master</nonQualifierBranches>
+</configuration>

@@ -3,24 +3,30 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                           http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>springboot-support</artifactId>
+    <groupId>io.cloudstate</groupId>
+    <artifactId>cloudstate-springboot-support</artifactId>
+    <version>0</version>
     <packaging>jar</packaging>
 
-    <parent>
-        <groupId>io.cloudstate</groupId>
-        <artifactId>spring-boot-cloudstate-starter</artifactId>
-        <version>0.5.1</version>
-    </parent>
-
+    <name>Cloudstate Spring Boot</name>
+    <description>Cloudstate Spring Boot support</description>
     <url>https://github.com/cloudstateio/springboot-support</url>
     <inceptionYear>2020</inceptionYear>
     <licenses>
         <license>
             <name>Apache 2.0</name>
-            <url>https://opensource.org/licenses/Apache-2.0</url>
-            <distribution>repo</distribution>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
+
+    <developers>
+        <developer>
+            <name>Cloudstate Contributors</name>
+            <email>contributors@cloudstate.io</email>
+            <organization>Cloudstate</organization>
+            <organizationUrl>https://cloudstate.io</organizationUrl>
+        </developer>
+    </developers>
 
     <scm>
         <connection>scm:git:git@github.com/cloudstateio/springboot-support</connection>
@@ -29,7 +35,7 @@
     </scm>
 
     <properties>
-        <cloudstate.version>0.5.1</cloudstate.version> 
+        <cloudstate.version>0.5.1</cloudstate.version>
         <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -78,7 +84,7 @@
     </dependencies>
 
     <build>
-        <finalName>springboot-support</finalName>
+        <finalName>cloudstate-springboot-support</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -114,6 +120,34 @@
             </plugin>
 
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>2.8.2</version>
                 <executions>
@@ -126,30 +160,13 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.7</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>io.cloudstate</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 
     <distributionManagement>
-        <snapshotRepository>
-            <id>io.cloudstate</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-
         <repository>
-            <id>io.cloudstate</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>bintray-cloudstateio-releases</id>
+            <url>https://api.bintray.com/maven/cloudstateio/releases/cloudstate-springboot-support/;publish=1</url>
         </repository>
     </distributionManagement>
 </project>

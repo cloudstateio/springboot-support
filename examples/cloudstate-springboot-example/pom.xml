@@ -3,13 +3,9 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <groupId>io.cloudstate</groupId>
     <artifactId>cloudstate-springboot-example</artifactId>
-
-    <parent>
-        <artifactId>examples</artifactId>
-        <groupId>io.cloudstate</groupId>
-        <version>0.5.1</version>
-    </parent>
+    <version>0</version>
 
     <properties>
         <main.class>io.cloudstate.springboot.example.Main</main.class>
@@ -29,8 +25,8 @@
     <dependencies>
         <dependency>
             <groupId>io.cloudstate</groupId>
-            <artifactId>springboot-support</artifactId>
-            <version>0.5.1</version>
+            <artifactId>cloudstate-springboot-support</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
@@ -183,13 +179,6 @@
                             <port>8080</port>
                         </ports>
                     </container>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
                 </configuration>
             </plugin>
         </plugins>

@@ -19,7 +19,7 @@ First add the dependency of the cloudstater starter to your project. Here an Mav
 <dependencies>
     <dependency>
         <groupId>io.cloudstate</groupId>
-        <artifactId>springboot-support</artifactId>
+        <artifactId>cloudstate-springboot-support</artifactId>
         <version>0.5.1</version>
     </dependency>
 </dependencies>
@@ -91,7 +91,7 @@ Here we have an example of a pom.xml file with all the necessary parts present:
     <dependencies>
         <dependency>
             <groupId>io.cloudstate</groupId>
-            <artifactId>springboot-support</artifactId>
+            <artifactId>cloudstate-springboot-support</artifactId>
             <version>0.5.1</version>
         </dependency>
     </dependencies>
