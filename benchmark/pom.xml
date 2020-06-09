@@ -3,13 +3,9 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <groupId>io.cloudstate</groupId>
     <artifactId>benchmark</artifactId>
-
-    <parent>
-        <groupId>io.cloudstate</groupId>
-        <artifactId>spring-boot-cloudstate-starter</artifactId>
-        <version>0.5.1</version>
-    </parent>
+    <version>0</version>
 
     <properties>
         <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
@@ -29,8 +25,8 @@
     <dependencies>
         <dependency>
             <groupId>io.cloudstate</groupId>
-            <artifactId>springboot-support</artifactId>
-            <version>0.5.1</version>
+            <artifactId>cloudstate-springboot-support</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- Tests -->

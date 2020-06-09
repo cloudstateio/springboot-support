@@ -6,9 +6,9 @@
 
     <groupId>io.cloudstate</groupId>
     <artifactId>examples</artifactId>
-    <version>0.5.1</version>
+    <version>0</version>
     <packaging>pom</packaging>
-    
+
     <modules>
         <module>cloudstate-springboot-example</module>
         <module>cloudstate-springboot-jsr330</module>

@@ -1,8 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -x
+set -e
 mvn clean
-cd cloudstate-springboot-starter && mvn install -DskipTests && cd ..
-cd examples/cloudstate-springboot-example && mvn protobuf:compile && mvn install
-cd ../cloudstate-springboot-jsr330 && mvn protobuf:compile && mvn install
-cd ../../ && cd cloudstate-springboot-starter && mvn install
+mvn --projects cloudstate-springboot-support install -DskipTests
+mvn --projects examples/cloudstate-springboot-example protobuf:compile install
+mvn --projects examples/cloudstate-springboot-jsr330 protobuf:compile install
+mvn --projects cloudstate-springboot-support install

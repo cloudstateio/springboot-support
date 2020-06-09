@@ -3,17 +3,13 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <groupId>io.cloudstate</groupId>
     <artifactId>cloudstate-springboot-jsr330</artifactId>
+    <version>0</version>
 
     <properties>
         <main.class>io.cloudstate.springboot.example.Main</main.class>
     </properties>
-
-    <parent>
-        <artifactId>examples</artifactId>
-        <groupId>io.cloudstate</groupId>
-        <version>0.5.1</version>
-    </parent>
 
     <dependencyManagement>
         <dependencies>
@@ -29,8 +25,8 @@
     <dependencies>
         <dependency>
             <groupId>io.cloudstate</groupId>
-            <artifactId>springboot-support</artifactId>
-            <version>0.5.1</version>
+            <artifactId>cloudstate-springboot-support</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
