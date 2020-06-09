@@ -2,15 +2,8 @@
 
 set -beEux -o pipefail
 
-PROTO_VERSION="3.7.1"
-PROTO_DIR="/tmp/proto$PROTO_VERSION"
-
-# Can't check for presence of directory as cache auto-creates it.
-if [ ! -f "$PROTO_DIR/bin/protoc" ]; then
-  wget -O - "https://github.com/google/protobuf/archive/v${PROTO_VERSION}.tar.gz" | tar xz -C /tmp
-  cd "/tmp/protobuf-${PROTO_VERSION}"
-  ./autogen.sh
-  ./configure --prefix="$PROTO_DIR" --disable-shared
-  make -j 4
-  make install
-fi
+PROTOC_ZIP=protoc-3.7.1-linux-x86_64.zip
+curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v3.7.1/$PROTOC_ZIP
+sudo unzip -o $PROTOC_ZIP -d /usr/local bin/protoc
+sudo unzip -o $PROTOC_ZIP -d /usr/local 'include/*'
+rm -f $PROTOC_ZIP
