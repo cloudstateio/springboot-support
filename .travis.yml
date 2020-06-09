@@ -1,4 +1,8 @@
 jdk: openjdk8
+
+before_install:
+- "./install-protoc.sh" 
+
 script:
 - chmod +x build.sh
 - "./build.sh"
