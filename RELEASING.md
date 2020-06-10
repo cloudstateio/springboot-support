@@ -4,11 +4,7 @@
 
 2. Create a [release and tag](https://github.com/cloudstateio/springboot-support/releases) for the next version.
 
-3. Travis will start a [build](https://travis-ci.com/github/cloudstateio/springboot-support/builds) and publish to Bintray.
-
-4. Go to the [Bintray package](https://bintray.com/cloudstateio/releases/cloudstate-springboot-support) and select the released version.
-
-5. Log in, go to the Maven Central tab, check the _Close and release repository when done_ checkbox and sync with Sonatype (using your Sonatype **User Token** key and password).
+3. Travis will start a [build](https://travis-ci.com/github/cloudstateio/springboot-support/builds) and publish to Bintray, and then sync to Maven Central.
 
 
 ## Snapshots
