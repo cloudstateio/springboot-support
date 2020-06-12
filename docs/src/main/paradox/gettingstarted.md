@@ -3,7 +3,7 @@
 ## Prerequisites
 
 ### Spring Boot version
-Cloudstate Spring Boot support requires Spring Boot >= 2.2.4.RELEASE.
+Cloudstate Spring Boot support requires Spring Boot >= $cloudstate.springboot.version$.
 
 Maven : @@@vars
 
@@ -11,7 +11,7 @@ Maven : @@@vars
     <dependency>
         <groupId>io.cloudstate</groupId>
         <artifactId>cloudstate-springboot-support</artifactId>
-        <version>0.5.1</version>
+        <version>$cloudstate.springboot.lib.version$</version>
     </dependency>
 </dependencies>
 
@@ -19,13 +19,13 @@ Maven : @@@vars
 
 sbt : @@@vars
 
-libraryDependencies += "io.cloudstate" % "cloudstate-springboot-support" % "0.5.1"
+libraryDependencies += "io.cloudstate" % "cloudstate-springboot-support" % "$cloudstate.springboot.lib.version$"
 
 @@@
 
 gradle : @@@vars
 
-compile group: 'io.cloudstate', name: 'cloudstate-springboot-support', version: '0.5.1'
+compile group: 'io.cloudstate', name: 'cloudstate-springboot-support', version: '$cloudstate.springboot.lib.version$'
 
 @@@
 
