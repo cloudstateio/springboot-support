@@ -15,52 +15,21 @@ So if you use method names other than those defined in the Cloudstate Springboot
 
  (entity.getSimpleName() + "ServiceDescriptor" for example)
  
-***Remembering that the first letter must always be lowercase, as well as the method and variable naming convention in Java***
+ @@@ note { title=Important } Remembering that the first letter must always be lowercase, as well as the method and variable naming convention in Java @@@
 
 Then you will need to use the name property of the '**@Bean**' annotation and define the name following these conventions.
 
 If your entity class is called ShoppinCartEntity then you can declare the beans as below:
 
-```java
-
-@Bean(name = "shoppingCartEntityServiceDescriptor")
-public Descriptors.ServiceDescriptor serviceDescriptor() {
-    return Shoppingcart.getDescriptor().findServiceByName("ShoppingCart");
-}
-
-@Bean(name = "shoppingCartEntityFileDescriptors")
-public Descriptors.FileDescriptor[] fileDescriptors() {
-   return new Descriptors.FileDescriptor[] {com.example.shoppingcart.persistence.Domain.getDescriptor()};
-}
-```
+@@snip [ShoppingCartEntity.java]($base$/docs/src/tests/paradox/ShoppingCartEntity.java) { #shopping-cart-descriptors }
 
 Or like this:
 
-```java
-@Bean
-public Descriptors.ServiceDescriptor shoppingCartEntityServiceDescriptor() {
-   return Shoppingcart.getDescriptor().findServiceByName("ShoppingCart");
-}
-
-@Bean
-public Descriptors.FileDescriptor[] shoppingCartEntityFileDescriptors() {
-    return new Descriptors.FileDescriptor[] {com.example.shoppingcart.persistence.Domain.getDescriptor()};
-}
-```
+@@snip [ShoppingCartEntity.java]($base$/docs/src/tests/paradox/ShoppingCartEntity.java) { #shopping-cart-descriptors-alternative }
 
 The other way is to use the created entity class itself and declare some annotated static methods like the example below:
 
-```java
-    @EntityServiceDescriptor
-    public static Descriptors.ServiceDescriptor getDescriptor() {
-        return Shoppingcart.getDescriptor().findServiceByName("ShoppingCart");
-    }
-
-    @EntityAdditionaDescriptors
-    public static Descriptors.FileDescriptor[] getAdditionalDescriptors() {
-        return new Descriptors.FileDescriptor[]{com.example.shoppingcart.persistence.Domain.getDescriptor()};
-    }
-```
+@snip [ShoppingCartEntity.java]($base$/docs/src/tests/paradox/ShoppingCartEntity.java) { #shopping-cart-descriptors-static }
 
 We prefer that you adopt the version based on the Spring conventions using configuration classes as in the 
-Getting Started example.
+@ref:[Getting Started](gettingstarted.md) example.
