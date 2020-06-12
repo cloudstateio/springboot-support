@@ -1,12 +1,15 @@
-# Getting started with stateful services in Spring Boot
+# Getting started with Spring Boot
 
 ## Prerequisites
 
 ### Spring Boot version
 Cloudstate Spring Boot support requires Spring Boot >= $cloudstate.springboot.version$.
 
-Maven : @@@vars
+### Build configurations
 
+Maven 
+: @@@vars
+```text
 <dependencies>
     <dependency>
         <groupId>io.cloudstate</groupId>
@@ -14,26 +17,27 @@ Maven : @@@vars
         <version>$cloudstate.springboot.lib.version$</version>
     </dependency>
 </dependencies>
-
+```
 @@@
 
-sbt : @@@vars
-
+sbt 
+: @@@vars
+```text
 libraryDependencies += "io.cloudstate" % "cloudstate-springboot-support" % "$cloudstate.springboot.lib.version$"
-
+```
 @@@
 
-gradle : @@@vars
-
+gradle 
+: @@@vars
+```text
 compile group: 'io.cloudstate', name: 'cloudstate-springboot-support', version: '$cloudstate.springboot.lib.version$'
-
+```
 @@@
 
 Cloudstate applications are based on contracts created via grpc, in the case of Maven-based Spring Boot applications you can use the following plugins to assist in this task:
 
 ```xml
  <build>
-
         <extensions>
             <extension>
                 <groupId>kr.motd.maven</groupId>
@@ -75,7 +79,7 @@ Here we have an example of a pom.xml file with all the necessary parts present:
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.cloudstate</groupId>
     <artifactId>cloudstate-springboot-example</artifactId>
-    <version>0.5.1</version>
+    <version>$cloudstate.springboot.lib.version$</version>
 
     <properties>
         <main.class>io.cloudstate.springboot.example.Main</main.class>
@@ -86,7 +90,7 @@ Here we have an example of a pom.xml file with all the necessary parts present:
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-parent</artifactId>
-                <version>2.2.4.RELEASE</version>
+                <version>$cloudstate.springboot.version$</version>
                 <type>pom</type>
             </dependency>
         </dependencies>
@@ -96,7 +100,7 @@ Here we have an example of a pom.xml file with all the necessary parts present:
         <dependency>
             <groupId>io.cloudstate</groupId>
             <artifactId>cloudstate-springboot-support</artifactId>
-            <version>0.5.1</version>
+            <version>$cloudstate.springboot.lib.version$</version>
         </dependency>
     </dependencies>
 
@@ -209,7 +213,7 @@ Here we have an example of a pom.xml file with all the necessary parts present:
 
 Subsequent source locations and build commands will assume the above Maven project, and may need to be adapted to your particular build tool and setup.
 
-## Protobuf files
+### Protobuf files
 
 The Xolstice Maven plugin assumes a location of `src/main/proto` for your protobuf files. In addition, it includes any protobuf files from your application dependencies in the protoc include path, so there's nothing you need to do to pull in either the Cloudstate protobuf types, or any of the Google standard protobuf types, they are all automatically available for import.
 
@@ -221,7 +225,7 @@ option java_package = "com.example.shoppingcart";
 
 Now if you run `mvn compile`, you'll find your generated protobuf files in `target/generated-sources/protobuf/java`.
 
-Write your Cloudstate function:
+### Write your Cloudstate function:
 
 @@snip [ShoppingCartEntity.java]($base$/docs/src/tests/paradox/ShoppingCartEntity.java) { #shopping-cart-entity }
 

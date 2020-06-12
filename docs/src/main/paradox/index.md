@@ -13,3 +13,5 @@ Cloudstate offers an idiomatic, annotation based Spring Boot support library for
 * [Examples](examples.md)
 
 @@@
+
+Link to @extref:[Cloudstate Documentation](cloudstate:index.html)
