@@ -1,4 +1,4 @@
-## Configuration
+# Configuration
 
 It is possible to configure certain application parameters either via the conventional springboot configuration file 
 ( **application.properties** or **application.yaml**) or via the HOCON configuration file (**application.conf**).

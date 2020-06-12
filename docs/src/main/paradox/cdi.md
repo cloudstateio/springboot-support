@@ -1,4 +1,4 @@
-## Context Injection
+# Context Injection
 
 As we saw in the Getting Started example, it is perfectly possible to inject any Bean available in Spring into a 
 Cloudstate entity class.
@@ -9,7 +9,7 @@ The Cloudstate Springboot Support library already includes the necessary depende
 You can annotate your entity classes with Spring @Component or @Service annotations but we have created a convenient 
 annotation that we call @CloudstateEntityBean that can be used for that too.
 
-### JSR330
+## JSR330
 
 The Cloudastate Springboot Support library supports JSR330 within the scope of the support provided by Spring itself to 
 this specification.
@@ -18,7 +18,7 @@ you want. However, no specific module for any of these other containers has yet 
 
 Feel free to contribute or suggest support for more runtimes.
 
-### Injecting EntityId and Cloudstate Context Objects
+## Injecting EntityId and Cloudstate Context Objects
 
 You can use the @EntityId annotation to access the managed entity's id.
 It is also possible to have access to the EventSourcedEntityCreationContext created during the activation of the object 

@@ -1,9 +1,9 @@
-## Conventions and Restrictions
+# Conventions and Restrictions
 
 Both Springboot and Cloudstate have some conventions and / or restrictions for creating objects. 
 In the sections below we describe those that are most relevant
 
-### Registering Protobuf Descriptors
+## Registering Protobuf Descriptors
 As mentioned earlier, there are two ways to register the protobuf descriptor files and here we will explain each one in 
 detail.
 
