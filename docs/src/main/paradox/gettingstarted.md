@@ -2,10 +2,10 @@
 
 ## Prerequisites
 
-### Spring Boot version
+## Spring Boot version
 Cloudstate Spring Boot support requires Spring Boot >= $cloudstate.springboot.version$.
 
-### Build configurations
+## Build configurations
 
 Maven 
 : @@@vars
@@ -213,7 +213,7 @@ Here we have an example of a pom.xml file with all the necessary parts present:
 
 Subsequent source locations and build commands will assume the above Maven project, and may need to be adapted to your particular build tool and setup.
 
-### Protobuf files
+## Protobuf files
 
 The Xolstice Maven plugin assumes a location of `src/main/proto` for your protobuf files. In addition, it includes any protobuf files from your application dependencies in the protoc include path, so there's nothing you need to do to pull in either the Cloudstate protobuf types, or any of the Google standard protobuf types, they are all automatically available for import.
 
@@ -225,7 +225,11 @@ option java_package = "com.example.shoppingcart";
 
 Now if you run `mvn compile`, you'll find your generated protobuf files in `target/generated-sources/protobuf/java`.
 
-### Write your Cloudstate function:
+## Write your Cloudstate function:
+
+In general you will write your entity functions in the usual way as you would if you were using the version of java support. For more information on how to create entity functions, see the specific documentation @extref:[here](cloudstate:user/lang/java/eventsourced.html#event-sourcing), and @extref:[here](cloudstate:user/lang/java/crdt.html#conflict-free-replicated-data-types).
+
+The differences will be explained later in this documentation. Below is an example of an EventSourced user entity:
 
 @@snip [ShoppingCartEntity.java]($base$/docs/src/tests/paradox/ShoppingCartEntity.java) { #shopping-cart-entity }
 
@@ -240,7 +244,7 @@ Here is an example of a suitable configuration class:
 @@snip [ShoppingCartEntity.java]($base$/docs/src/tests/paradox/ShoppingCartEntity.java) { #shopping-cart-configuration }
 
 Then write your simple main class in the Spring boot style. 
-Uses the **@EnableCloudstate** annotation to tell Spring what to do:
+In Cloudstate Spring Boot support it is not necessary to register your entities explicitly, instead you just use the annotation **@EnableCloudstate** to tell Spring what to do:
 
 @@snip [ShoppingCartEntity.java]($base$/docs/src/tests/paradox/ShoppingCartEntity.java) { #shopping-cart-main }
 
