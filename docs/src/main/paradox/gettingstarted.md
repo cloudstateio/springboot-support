@@ -34,7 +34,7 @@ compile group: 'io.cloudstate', name: 'cloudstate-springboot-support', version: 
 ```
 @@@
 
-Cloudstate applications are based on contracts created via grpc, in the case of Maven-based Spring Boot applications you can use the following plugins to assist in this task:
+Cloudstate applications are based on contracts created via gRPC, in the case of Maven-based Spring Boot applications you can use the following plugins to assist in this task:
 
 ```xml
  <build>
