@@ -209,7 +209,9 @@ Here we have an example of a pom.xml file with all the necessary parts present:
 </project>
 ```
 
-@@@ note { title=Important } Remember to change the values of the main.class, repo.name, and version tags to their respective values @@@
+@@@ note { title=Important }
+Remember to change the values of the main.class, repo.name, and version tags to their respective values
+@@@
 
 Subsequent source locations and build commands will assume the above Maven project, and may need to be adapted to your particular build tool and setup.
 
