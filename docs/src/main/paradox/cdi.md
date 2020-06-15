@@ -11,7 +11,7 @@ annotation that we call @CloudstateEntityBean that can be used for that too.
 
 ## JSR330
 
-The Cloudastate Springboot Support library supports JSR330 within the scope of the support provided by Spring itself to 
+The Cloudstate Spring Boot Support library supports JSR330 within the scope of the support provided by Spring itself to 
 this specification.
 Note that the Cloudstate Java Support library on which we depend allows you to bind Cloudstate and any other DI container 
 you want. However, no specific module for any of these other containers has yet been made.
