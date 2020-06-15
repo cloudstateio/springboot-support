@@ -7,7 +7,7 @@ Cloudstate Spring Boot support requires Spring Boot >= $cloudstate.springboot.ve
 
 ## Build configurations
 
-Maven 
+Maven
 : @@@vars
 ```text
 <dependencies>
@@ -20,14 +20,14 @@ Maven
 ```
 @@@
 
-sbt 
+sbt
 : @@@vars
 ```text
 libraryDependencies += "io.cloudstate" % "cloudstate-springboot-support" % "$cloudstate.springboot.lib.version$"
 ```
 @@@
 
-gradle 
+gradle
 : @@@vars
 ```text
 compile group: 'io.cloudstate', name: 'cloudstate-springboot-support', version: '$cloudstate.springboot.lib.version$'
@@ -245,12 +245,14 @@ Here is an example of a suitable configuration class:
 
 @@snip [ShoppingCartEntity.java]($base$/docs/src/tests/paradox/ShoppingCartEntity.java) { #shopping-cart-configuration }
 
-Then write your simple main class in the Spring boot style.
+Then write your simple main class in the Spring boot style:
 
 @@snip [ShoppingCartEntity.java]($base$/docs/src/tests/paradox/ShoppingCartEntity.java) { #shopping-cart-main }
 
 @@@ note { title=Important }
+
 In Cloudstate Spring Boot support it is not necessary to register your entities explicitly, instead you just use the annotation `@EnableCloudstate` to tell Spring what to do
+
 @@@
 
 Then run the application in the same way as you would any other springboot application with ```mvn spring-boot:run``` command.

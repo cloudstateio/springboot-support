@@ -15,11 +15,15 @@ So if you use method names other than those defined in the Cloudstate Springboot
 
  (entity.getSimpleName() + "ServiceDescriptor" for example)
  
- @@@ note { title=Important } Remembering that the first letter must always be lowercase, as well as the method and variable naming convention in Java @@@
+ @@@ note { title=Important } 
+ 
+ Remembering that the first letter must always be lowercase, as well as the method and variable naming convention in Java 
+ 
+ @@@
 
-Then you will need to use the name property of the '**@Bean**' annotation and define the name following these conventions.
+then you will need to use the name property of the '`@Bean`' annotation and define the name following these conventions.
 
-If your entity class is called ShoppinCartEntity then you can declare the beans as below:
+If your entity class is called ShoppingCartEntity then you can declare the beans as below:
 
 @@snip [ShoppingCartEntity.java]($base$/docs/src/tests/paradox/ShoppingCartEntity.java) { #shopping-cart-descriptors }
 
