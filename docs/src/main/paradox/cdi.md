@@ -7,7 +7,7 @@ It is also possible to use the annotations present in the javax.inject package
 The Cloudstate Springboot Support library already includes the necessary dependencies so you don't have to worry about it.
 
 You can annotate your entity classes with Spring `@Component` or `@Service` annotations but we have created a convenient 
-annotation that we call @CloudstateEntityBean that can be used for that too.
+annotation that we call `@CloudstateEntityBean` that can be used for that too.
 
 ## JSR330
 
