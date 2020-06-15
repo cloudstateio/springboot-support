@@ -68,5 +68,9 @@ public final class ShoppingCartEntity {
     //......
 }
 ```
-@@@ note { title=Important } As you can see, the constructor injection constraint applies only to EntityId and CreationContext. 
-So, as in the example above, you can mix the approaches and get the best of both worlds together @@@
+@@@ note { title=Important }
+
+As you can see, the constructor injection constraint applies only to EntityId and CreationContext. 
+So, as in the example above, you can mix the approaches and get the best of both worlds together 
+
+@@@

@@ -15,11 +15,9 @@ So if you use method names other than those defined in the Cloudstate Springboot
 
  (entity.getSimpleName() + "ServiceDescriptor" for example)
  
- @@@ note { title=Important } 
- 
- Remembering that the first letter must always be lowercase, as well as the method and variable naming convention in Java 
- 
- @@@
+@@@ note { title=Important }
+Remembering that the first letter must always be lowercase, as well as the method and variable naming convention in Java 
+@@@
 
 then you will need to use the name property of the '`@Bean`' annotation and define the name following these conventions.
 

@@ -7,6 +7,8 @@ Cloudstate Spring Boot support requires Spring Boot >= $cloudstate.springboot.ve
 
 ## Build configurations
 
+You must first add the Cloudstate dependency to your project:
+
 Maven
 : @@@vars
 ```text
