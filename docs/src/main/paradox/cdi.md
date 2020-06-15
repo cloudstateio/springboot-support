@@ -20,7 +20,7 @@ Feel free to contribute or suggest support for more runtimes.
 
 ## Injecting EntityId and Cloudstate Context Objects
 
-You can use the @EntityId annotation to access the managed entity's id.
+You can use the `@EntityId` annotation to access the managed entity's id.
 It is also possible to have access to the EventSourcedEntityCreationContext created during the activation of the object 
 by Cloudstate. However for this you will need to annotate the Context property with the annotation @CloudstateContext 
 as in the example below:
