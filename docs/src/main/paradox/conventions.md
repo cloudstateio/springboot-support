@@ -17,7 +17,7 @@ So if you use method names other than those defined in the Cloudstate Springboot
  
  @@@ note { title=Important } Remembering that the first letter must always be lowercase, as well as the method and variable naming convention in Java @@@
 
-Then you will need to use the name property of the '**@Bean**' annotation and define the name following these conventions.
+Then you will need to use the name property of the `@Bean` annotation and define the name following these conventions.
 
 If your entity class is called ShoppinCartEntity then you can declare the beans as below:
 
