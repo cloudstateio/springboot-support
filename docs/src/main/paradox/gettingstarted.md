@@ -238,7 +238,7 @@ The differences will be explained later in this documentation. Below is an examp
 To work Cloudstate requires that the descriptors of the protobuf's files are explicitly registered.
 We have two ways to do this:
 
-* Via Springboot by creating a Spring Boot Configuration class and registering these types accordingly. 
+* Via Spring Boot by creating a Spring Boot Configuration class and registering these types accordingly. 
 * Programmatically way we’ll explain later in @ref:[Conventions and Restrictions](conventions.md).
 
 Here is an example of a suitable configuration class:
