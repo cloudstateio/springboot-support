@@ -10,7 +10,7 @@ detail.
 First using the Spring configuration.
  
 Spring's bean declaration conventions define that the method name is exactly the name that will be registered in
-the Spring injection container as a qualifier. 
+the Spring injection container as a qualifier.
 So if you use method names other than those defined in the Cloudstate Springboot support convention:
 
  (entity.getSimpleName() + "ServiceDescriptor" for example)
@@ -21,11 +21,7 @@ So if you use method names other than those defined in the Cloudstate Springboot
  
  @@@
 
-<<<<<<< HEAD
 then you will need to use the name property of the '`@Bean`' annotation and define the name following these conventions.
-=======
-Then you will need to use the name property of the `@Bean` annotation and define the name following these conventions.
->>>>>>> origin/wip-spring-documentation
 
 If your entity class is called ShoppingCartEntity then you can declare the beans as below:
 
