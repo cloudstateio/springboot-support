@@ -11,11 +11,9 @@ First using the Spring configuration.
  
 Spring's bean declaration conventions define that the method name is exactly the name that will be registered in
 the Spring injection container as a qualifier.
-So if you use method names other than those defined in the Cloudstate Springboot support convention:
-
- (entity.getSimpleName() + "ServiceDescriptor" for example)
-
-then you will need to use the name property of the '`@Bean`' annotation and define the name following these conventions.
+So if you use method names other than those defined in the Cloudstate Springboot support convention like
+(entity.getSimpleName() + "ServiceDescriptor") for example then you will need to use the name property of the '`@Bean`' 
+annotation and define the name following these conventions.
 
 @@@ note { title=Important }
 Remembering that the first letter must always be lowercase, as well as the method and variable naming convention in Java 
@@ -31,7 +29,7 @@ Or like this:
 
 The other way is to use the created entity class itself and declare some annotated static methods like the example below:
 
-@snip [ShoppingCartEntity.java]($base$/docs/src/tests/paradox/ShoppingCartEntity.java) { #shopping-cart-descriptors-static }
+@@snip [ShoppingCartEntity.java]($base$/docs/src/tests/paradox/ShoppingCartEntity.java) { #shopping-cart-descriptors-static }
 
 We prefer that you adopt the version based on the Spring conventions using configuration classes as in the 
 @ref:[Getting Started](gettingstarted.md) example.
