@@ -239,7 +239,7 @@ To work Cloudstate requires that the descriptors of the protobuf's files are exp
 We have two ways to do this:
 
 * Via Spring Boot by creating a Spring Boot Configuration class and registering these types accordingly. 
-* Programmatically way we’ll explain later in @ref:[Conventions and Restrictions](conventions.md).
+* Programmatically, which we’ll explain later in @ref:[Conventions and Restrictions](conventions.md).
 
 Here is an example of a suitable configuration class:
 
