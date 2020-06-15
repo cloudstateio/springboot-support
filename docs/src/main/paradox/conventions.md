@@ -21,7 +21,11 @@ So if you use method names other than those defined in the Cloudstate Springboot
  
  @@@
 
+<<<<<<< HEAD
 then you will need to use the name property of the '`@Bean`' annotation and define the name following these conventions.
+=======
+Then you will need to use the name property of the `@Bean` annotation and define the name following these conventions.
+>>>>>>> origin/wip-spring-documentation
 
 If your entity class is called ShoppingCartEntity then you can declare the beans as below:
 
