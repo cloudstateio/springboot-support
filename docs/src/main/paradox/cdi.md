@@ -36,7 +36,7 @@ private EventSourcedContext context;
 ### Using properties instead constructors
 
 It is currently not possible to inject Cloudstate's EntityId and Context properties via constructor. 
-This is because the life cycles of these priorities differ from the life cycle of objects managed directly by Spring.
+This is because the life cycles of these properties differ from the life cycle of objects managed directly by Spring.
 
 This is obviously only an issue if you want to inject EntityId or EventSourcedEntityCreationContext.
 Otherwise, if you want to inject only other Spring Context Beans, you can use injection via builders as normal.
