@@ -17,7 +17,8 @@ jobs:
       name: deploy docs to cloudstate.io
       if: repo = cloudstateio/springboot-support AND ((branch = master AND type = push) OR tag =~ ^v)
       language: scala
-      script: ./build.sh && cd docs && sbt deploy
+      install: false
+      script: cd docs && sbt deploy
 
 stages:
   - build
