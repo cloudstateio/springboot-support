@@ -13,7 +13,7 @@ import io.cloudstate.javasupport.CloudState;
 import io.cloudstate.springboot.starter.internal.CloudstateEntityScan;
 
 @Configuration
-@ConditionalOnClass(CloudstateProperties.class)
+@ConditionalOnClass(CloudState.class)
 @EnableConfigurationProperties(CloudstateProperties.class)
 @ComponentScan(basePackages = "io.cloudstate.springboot.starter")
 public class CloudstateAutoConfiguration {
