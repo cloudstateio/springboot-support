@@ -1,44 +1,50 @@
-# Getting started with Spring Boot
+= Getting started with Spring Boot
 
-## Prerequisites
+include::partial$attributes.adoc[]
+include::partial$include.adoc[]
 
-## Spring Boot version
-Cloudstate Spring Boot support requires Spring Boot >= $cloudstate.springboot.version$.
+== Prerequisites
 
-## Build configurations
+== Spring Boot version
+
+Cloudstate Spring Boot support requires Spring Boot >= {cloudstate-springboot-version}.
+
+== Build configurations
 
 You must first add the Cloudstate dependency to your project:
 
-Maven
-: @@@vars
-```text
+[.tabset]
+Maven::
++
+[source,xml,subs="attributes+"]
+----
 <dependencies>
     <dependency>
         <groupId>io.cloudstate</groupId>
         <artifactId>cloudstate-springboot-support</artifactId>
-        <version>$cloudstate.springboot.lib.version$</version>
+        <version>{cloudstate-springboot-lib-version}</version>
     </dependency>
 </dependencies>
-```
-@@@
+----
 
-sbt
-: @@@vars
-```text
-libraryDependencies += "io.cloudstate" % "cloudstate-springboot-support" % "$cloudstate.springboot.lib.version$"
-```
-@@@
+sbt::
++
+[source,scala,subs="attributes+"]
+----
+libraryDependencies += "io.cloudstate" % "cloudstate-springboot-support" % "{cloudstate-springboot-lib-version}"
+----
 
-gradle
-: @@@vars
-```text
-compile group: 'io.cloudstate', name: 'cloudstate-springboot-support', version: '$cloudstate.springboot.lib.version$'
-```
-@@@
+gradle::
++
+[source,gradle,subs="attributes+"]
+----
+compile group: 'io.cloudstate', name: 'cloudstate-springboot-support', version: '{cloudstate-springboot-lib-version}'
+----
 
 Cloudstate applications are based on contracts created via gRPC, in the case of Maven-based Spring Boot applications you can use the following plugins to assist in this task:
 
-```xml
+[source,xml]
+----
  <build>
         <extensions>
             <extension>
@@ -68,20 +74,21 @@ Cloudstate applications are based on contracts created via gRPC, in the case of 
             </plugin>
         </plugins>
 </build>
-```
+----
 
 Here we have an example of a pom.xml file with all the necessary parts present:
 
-```xml
+[source,xml,subs="attributes+"]
+----
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.cloudstate</groupId>
     <artifactId>cloudstate-springboot-example</artifactId>
-    <version>$cloudstate.springboot.lib.version$</version>
+    <version>{cloudstate-springboot-lib-version}</version>
 
     <properties>
         <main.class>io.cloudstate.springboot.example.Main</main.class>
@@ -92,7 +99,7 @@ Here we have an example of a pom.xml file with all the necessary parts present:
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-parent</artifactId>
-                <version>$cloudstate.springboot.version$</version>
+                <version>{cloudstate-springboot-version}</version>
                 <type>pom</type>
             </dependency>
         </dependencies>
@@ -102,7 +109,7 @@ Here we have an example of a pom.xml file with all the necessary parts present:
         <dependency>
             <groupId>io.cloudstate</groupId>
             <artifactId>cloudstate-springboot-support</artifactId>
-            <version>$cloudstate.springboot.lib.version$</version>
+            <version>{cloudstate-springboot-lib-version}</version>
         </dependency>
     </dependencies>
 
@@ -209,52 +216,60 @@ Here we have an example of a pom.xml file with all the necessary parts present:
     </build>
 
 </project>
-```
+----
 
-@@@ note { title=Important }
-Remember to change the values of the main.class, repo.name, and version tags to their respective values
-@@@
+IMPORTANT: Remember to change the values of the `main.class`, `repo.name`, and `version` tags to their respective values
 
 Subsequent source locations and build commands will assume the above Maven project, and may need to be adapted to your particular build tool and setup.
 
-## Protobuf files
+== Protobuf files
 
-The Xolstice Maven plugin assumes a location of `src/main/proto` for your protobuf files. In addition, it includes any protobuf files from your application dependencies in the protoc include path, so there's nothing you need to do to pull in either the Cloudstate protobuf types, or any of the Google standard protobuf types, they are all automatically available for import.
+The Xolstice Maven plugin assumes a location of `src/main/proto` for your protobuf files.
+In addition, it includes any protobuf files from your application dependencies in the protoc include path, so there's nothing you need to do to pull in either the Cloudstate protobuf types, or any of the Google standard protobuf types, they are all automatically available for import.
 
-So, if you were to build the example shopping cart application shown earlier in @extref[gRPC descriptors](cloudstate:user/features/grpc.html), you could simply paste that protobuf into `src/main/proto/shoppingcart.proto`. You may wish to also define the java package, to ensure the package name used conforms to Java package naming conventions:
+So, if you were to build the example shopping cart application shown earlier in xref:concepts:grpc.adoc[gRPC descriptors], you could simply paste that protobuf into `src/main/proto/shoppingcart.proto`.
+You may wish to also define the java package, to ensure the package name used conforms to Java package naming conventions:
 
-```proto
+[source,protobuf]
+----
 option java_package = "com.example.shoppingcart";
-```
+----
 
 Now if you run `mvn compile`, you'll find your generated protobuf files in `target/generated-sources/protobuf/java`.
 
-## Write your Cloudstate function:
+== Write your Cloudstate function:
 
-In general you will write your entity functions in the usual way as you would if you were using the version of java support. For more information on how to create entity functions, see the specific documentation @extref:[here](cloudstate:user/lang/java/eventsourced.html#event-sourcing), and @extref:[here](cloudstate:user/lang/java/crdt.html#conflict-free-replicated-data-types).
+In general you will write your entity functions in the usual way as you would if you were using the version of xref:java:index.adoc[Java support].
+For more information on how to create entity functions, see the specific documentation for xref:java:eventsourced.adoc[event sourced] and xref:java:crdt.adoc[CRDT] entities.
 
-The differences will be explained later in this documentation. Below is an example of an EventSourced user entity:
+The differences will be explained later in this documentation.
+Below is an example of an EventSourced user entity:
 
-@@snip [ShoppingCartEntity.java]($base$/docs/src/tests/paradox/ShoppingCartEntity.java) { #shopping-cart-entity }
+[source,java]
+----
+include::example$ShoppingCartEntity.java[tag=shopping-cart-entity]
+----
 
 To work Cloudstate requires that the descriptors of the protobuf's files are explicitly registered.
 We have two ways to do this:
 
-* Via Spring Boot by creating a Spring Boot Configuration class and registering these types accordingly. 
-* Programmatically, which we’ll explain later in @ref:[Conventions and Restrictions](conventions.md).
+* Via Spring Boot by creating a Spring Boot Configuration class and registering these types accordingly.
+* Programmatically, which we'll explain later in xref:conventions.adoc[Conventions and Restrictions].
 
 Here is an example of a suitable configuration class:
 
-@@snip [ShoppingCartEntity.java]($base$/docs/src/tests/paradox/ShoppingCartEntity.java) { #shopping-cart-configuration }
+[source,java]
+----
+include::example$ShoppingCartEntity.java[tag=shopping-cart-configuration]
+----
 
 Then write your simple main class in the Spring boot style:
 
-@@snip [ShoppingCartEntity.java]($base$/docs/src/tests/paradox/ShoppingCartEntity.java) { #shopping-cart-main }
+[source,java]
+----
+include::example$ShoppingCartEntity.java[tag=shopping-cart-main]
+----
 
-@@@ note { title=Important }
+IMPORTANT: In Cloudstate Spring Boot support it is not necessary to register your entities explicitly, instead you just use the annotation `@EnableCloudstate` to tell Spring what to do
 
-In Cloudstate Spring Boot support it is not necessary to register your entities explicitly, instead you just use the annotation `@EnableCloudstate` to tell Spring what to do
-
-@@@
-
-Then run the application in the same way as you would any other springboot application with ```mvn spring-boot:run``` command.
+Then run the application in the same way as you would any other springboot application with `mvn spring-boot:run` command.

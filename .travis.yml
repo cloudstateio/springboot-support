@@ -13,15 +13,16 @@ jobs:
           tags: true
           repo: cloudstateio/springboot-support
 
+    - stage: validate_docs
+      script: make -C docs
+
     - stage: deploy_docs
-      name: deploy docs to cloudstate.io
-      if: repo = cloudstateio/springboot-support AND ((branch = master AND type = push) OR tag =~ ^v)
-      language: scala
-      install: true
-      script: cd docs && sbt deploy
+      if: repo = cloudstateio/springboot-support AND tag =~ ^v
+      script: make -C docs deploy
 
 stages:
   - build
+  - validate_docs
   - deploy_docs
 
 env:

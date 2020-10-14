@@ -1,4 +1,4 @@
-//#shopping-cart-entity
+// tag::shopping-cart-entity[]
 /**
  * An event sourced entity.
  */
@@ -84,9 +84,9 @@ public class ShoppingCartEntity {
         return Empty.getDefaultInstance();
     }
 }
-//#shopping-cart-entity
+// end::shopping-cart-entity[]
 
-//#shopping-cart-configuration
+// tag::shopping-cart-configuration[]
 import com.example.shoppingcart.Shoppingcart;
 import com.google.protobuf.Descriptors;
 import org.springframework.context.annotation.Bean;
@@ -105,9 +105,9 @@ public class DescriptorsConfiguration {
         return new Descriptors.FileDescriptor[]{com.example.shoppingcart.persistence.Domain.getDescriptor()};
     }
 }
-//#shopping-cart-configuration
+// end::shopping-cart-configuration[]
 
-//#shopping-cart-main
+// tag::shopping-cart-main[]
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import io.cloudstate.springboot.starter.autoconfigure.EnableCloudstate;
@@ -117,9 +117,9 @@ import io.cloudstate.springboot.starter.autoconfigure.EnableCloudstate;
 public class Main {
     public static void main(String[] args) { SpringApplication.run(Main.class, args); }
 }
-//#shopping-cart-main
+// end::shopping-cart-main[]
 
-//#shopping-cart-descriptors
+// tag::shopping-cart-descriptors[]
 @Bean(name = "shoppingCartEntityServiceDescriptor")
 public Descriptors.ServiceDescriptor serviceDescriptor() {
     return Shoppingcart.getDescriptor().findServiceByName("ShoppingCart");
@@ -129,9 +129,9 @@ public Descriptors.ServiceDescriptor serviceDescriptor() {
 public Descriptors.FileDescriptor[] fileDescriptors() {
    return new Descriptors.FileDescriptor[] {com.example.shoppingcart.persistence.Domain.getDescriptor()};
 }
-//#shopping-cart-descriptors
+// end::shopping-cart-descriptors[]
 
-//#shopping-cart-descriptors-alternative
+// tag::shopping-cart-descriptors-alternative[]
 @Bean
 public Descriptors.ServiceDescriptor shoppingCartEntityServiceDescriptor() {
    return Shoppingcart.getDescriptor().findServiceByName("ShoppingCart");
@@ -141,9 +141,9 @@ public Descriptors.ServiceDescriptor shoppingCartEntityServiceDescriptor() {
 public Descriptors.FileDescriptor[] shoppingCartEntityFileDescriptors() {
     return new Descriptors.FileDescriptor[] {com.example.shoppingcart.persistence.Domain.getDescriptor()};
 }
-//#shopping-cart-descriptors-alternative
+// end::shopping-cart-descriptors-alternative[]
 
-//#shopping-cart-descriptors-static
+// tag::shopping-cart-descriptors-static[]
 @EntityServiceDescriptor
 public static Descriptors.ServiceDescriptor getDescriptor() {
     return Shoppingcart.getDescriptor().findServiceByName("ShoppingCart");
@@ -153,4 +153,4 @@ public static Descriptors.ServiceDescriptor getDescriptor() {
 public static Descriptors.FileDescriptor[] getAdditionalDescriptors() {
     return new Descriptors.FileDescriptor[]{com.example.shoppingcart.persistence.Domain.getDescriptor()};
 }
-//#shopping-cart-descriptors-static
+// end::shopping-cart-descriptors-static[]
