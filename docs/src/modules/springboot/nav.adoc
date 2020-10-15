@@ -1,0 +1,6 @@
+* xref:index.adoc[Implementing in Spring Boot]
+** xref:gettingstarted.adoc[Getting started]
+** xref:configuration.adoc[Configuration]
+** xref:cdi.adoc[Context Injection]
+** xref:conventions.adoc[Conventions and Restrictions]
+** xref:examples.adoc[Examples]
