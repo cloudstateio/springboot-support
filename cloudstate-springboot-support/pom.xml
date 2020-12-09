@@ -35,7 +35,7 @@
     </scm>
 
     <properties>
-        <cloudstate.version>0.5.1</cloudstate.version>
+        <cloudstate.version>0.5.2</cloudstate.version>
         <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
