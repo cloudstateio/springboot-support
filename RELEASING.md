@@ -2,7 +2,7 @@
 
 1. Wait for any running [Travis builds](https://travis-ci.com/github/cloudstateio/springboot-support/builds) to complete.
 
-2. Create a [release and tag](https://github.com/cloudstateio/springboot-support/releases) for the next version.
+2. Create an annotated tag (with `git tag -a vX.Y.Z`) and then [release](https://github.com/cloudstateio/springboot-support/releases) for the next version.
 
 3. Travis will start a [build](https://travis-ci.com/github/cloudstateio/springboot-support/builds) and publish to Bintray, and then sync to Maven Central.
 

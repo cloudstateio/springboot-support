@@ -6,7 +6,8 @@ mvn --projects cloudstate-springboot-support -am deploy --settings deployment/se
 
 # Sync to Maven Central via Bintray
 
-readonly version=$(git describe --tags --exact-match)
+readonly tag=$(git describe --tags --exact-match)
+readonly version=${tag#v}
 
 [ -z "$version" ] && echo "No version tag for current commit" && exit 1
 
